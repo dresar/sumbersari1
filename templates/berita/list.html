@@ -1,0 +1,626 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Berita Desa - Portal Desa Sumber Sari{% endblock %}
+
+{% block extra_css %}
+<style>
+.news-hero {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    color: white;
+    padding: 80px 0;
+}
+
+.news-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.category-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+}
+
+.news-meta {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.filter-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.search-box {
+    border-radius: 25px;
+    border: 2px solid #e9ecef;
+    padding: 12px 20px;
+}
+
+.search-box:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
+}
+
+.featured-news {
+    position: relative;
+    height: 400px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.featured-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    color: white;
+    padding: 40px 30px 30px;
+}
+
+.breaking-news {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.breaking-news::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: breaking-shine 3s infinite;
+}
+
+@keyframes breaking-shine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.trending-tag {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    color: white;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.load-more-btn {
+    background: linear-gradient(45deg, #0d6efd, #0a58ca);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.load-more-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13,110,253,0.4);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- News Hero Section -->
+<section class="news-hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-newspaper me-3"></i>Berita Desa Sumber Sari
+                </h1>
+                <p class="lead mb-4">Informasi terkini seputar kegiatan, program, dan perkembangan Desa Sumber Sari</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-light text-dark px-3 py-2">
+                        <i class="fas fa-clock me-1"></i>Update Harian
+                    </span>
+                    <span class="badge bg-light text-dark px-3 py-2">
+                        <i class="fas fa-check-circle me-1"></i>Terpercaya
+                    </span>
+                    <span class="badge bg-light text-dark px-3 py-2">
+                        <i class="fas fa-eye me-1"></i>Transparan
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Breaking News -->
+<section class="py-4">
+    <div class="container">
+        <div class="breaking-news">
+            <div class="d-flex align-items-center">
+                <div class="me-3">
+                    <span class="badge bg-white text-danger fw-bold px-3 py-2">
+                        <i class="fas fa-bolt me-1"></i>BREAKING
+                    </span>
+                </div>
+                <div class="flex-grow-1">
+                    <marquee behavior="scroll" direction="left" scrollamount="3">
+                        <strong>Penyaluran Bantuan Langsung Tunai (BLT) Tahap II dimulai 15 Juni 2025 • Pendaftaran UMKM Online dibuka hingga 30 Juni 2025 • Vaksinasi COVID-19 booster tersedia di Puskesmas Desa setiap Rabu</strong>
+                    </marquee>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filter & Search Section -->
+<section class="py-4">
+    <div class="container">
+        <div class="filter-section">
+            <div class="row align-items-center">
+                <div class="col-lg-4 col-md-6 mb-3 mb-lg-0">
+                    <div class="input-group">
+                        <input type="text" class="form-control search-box" placeholder="Cari berita..." id="searchNews">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+                    <select class="form-select" id="categoryFilter">
+                        <option value="">Semua Kategori</option>
+                        <option value="pemerintahan">Pemerintahan</option>
+                        <option value="pembangunan">Pembangunan</option>
+                        <option value="sosial">Sosial</option>
+                        <option value="ekonomi">Ekonomi</option>
+                        <option value="budaya">Budaya</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+                    <select class="form-select" id="dateFilter">
+                        <option value="">Semua Waktu</option>
+                        <option value="today">Hari Ini</option>
+                        <option value="week">Minggu Ini</option>
+                        <option value="month">Bulan Ini</option>
+                        <option value="year">Tahun Ini</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <select class="form-select" id="sortFilter">
+                        <option value="newest">Terbaru</option>
+                        <option value="oldest">Terlama</option>
+                        <option value="popular">Terpopuler</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured News -->
+<section class="py-4">
+    <div class="container">
+        <div class="featured-news" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('{% static 'images/featured-news.jpg' %}'); background-size: cover; background-position: center;">
+            <div class="featured-overlay">
+                <span class="trending-tag mb-2 d-inline-block">
+                    <i class="fas fa-fire me-1"></i>TRENDING
+                </span>
+                <h2 class="h3 fw-bold mb-3">Pembangunan Jalan Desa Tahap II Dimulai, Target Selesai Akhir 2025</h2>
+                <p class="mb-3">Proyek pembangunan infrastruktur jalan desa sepanjang 2.5 km memasuki tahap kedua dengan anggaran dari Dana Desa dan APBD Kabupaten Bantul...</p>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="news-meta text-white-50">
+                        <i class="fas fa-calendar me-1"></i>8 Juni 2025 | 
+                        <i class="fas fa-user me-1"></i>Tim Redaksi | 
+                        <i class="fas fa-eye me-1"></i>1,247 views
+                    </div>
+                    <a href="#" class="btn btn-light">
+                        <i class="fas fa-arrow-right me-1"></i>Baca Selengkapnya
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main News Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- News List -->
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3><i class="fas fa-list me-2 text-primary"></i>Semua Berita</h3>
+                    <span class="text-muted">Menampilkan 24 dari 156 berita</span>
+                </div>
+
+                <div class="row" id="newsList">
+                    <!-- News Item 1 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card news-card h-100">
+                            <div class="position-relative">
+                                <img src="{% static 'images/news-1.jpg' %}" class="card-img-top" alt="Berita 1" style="height: 220px; object-fit: cover;">
+                                <span class="badge bg-primary category-badge">Pemerintahan</span>
+                                <div class="position-absolute bottom-0 end-0 m-2">
+                                    <span class="badge bg-dark bg-opacity-75">
+                                        <i class="fas fa-camera me-1"></i>5 Foto
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Rapat Koordinasi BPD dan Perangkat Desa Bahas RPJM Desa 2025-2030</h5>
+                                <p class="card-text text-muted">Badan Permusyawaratan Desa (BPD) bersama perangkat desa menggelar rapat koordinasi untuk membahas Rencana Pembangunan Jangka Menengah...</p>
+                                <div class="news-meta mb-3">
+                                    <i class="fas fa-calendar me-1"></i>7 Juni 2025 | 
+                                    <i class="fas fa-user me-1"></i>Sekretaris Desa | 
+                                    <i class="fas fa-heart text-danger me-1"></i>23 | 
+                                    <i class="fas fa-comment me-1"></i>5
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-arrow-right me-1"></i>Baca Selengkapnya
+                                    </a>
+                                    <div>
+                                        <button class="btn btn-outline-secondary btn-sm me-1" title="Bagikan">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" title="Sukai">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- News Item 2 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card news-card h-100">
+                            <div class="position-relative">
+                                <img src="{% static 'images/news-2.jpg' %}" class="card-img-top" alt="Berita 2" style="height: 220px; object-fit: cover;">
+                                <span class="badge bg-success category-badge">Pembangunan</span>
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-star me-1"></i>Populer
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Bedah Rumah Program RTLH Sasar 15 Keluarga Tidak Mampu</h5>
+                                <p class="card-text text-muted">Program Rumah Tidak Layak Huni (RTLH) tahun 2025 menargetkan renovasi 15 rumah milik keluarga tidak mampu dengan dana hibah dari provinsi...</p>
+                                <div class="news-meta mb-3">
+                                    <i class="fas fa-calendar me-1"></i>6 Juni 2025 | 
+                                    <i class="fas fa-user me-1"></i>Kasi Kesra | 
+                                    <i class="fas fa-heart text-danger me-1"></i>87 | 
+                                    <i class="fas fa-comment me-1"></i>12
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" class="btn btn-success btn-sm">
+                                        <i class="fas fa-arrow-right me-1"></i>Baca Selengkapnya
+                                    </a>
+                                    <div>
+                                        <button class="btn btn-outline-secondary btn-sm me-1" title="Bagikan">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" title="Sukai">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- News Item 3 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card news-card h-100">
+                            <div class="position-relative">
+                                <img src="{% static 'images/news-3.jpg' %}" class="card-img-top" alt="Berita 3" style="height: 220px; object-fit: cover;">
+                                <span class="badge bg-info category-badge">Sosial</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Posyandu Balita Bulan Juni: Imunisasi dan Pemeriksaan Kesehatan Gratis</h5>
+                                <p class="card-text text-muted">Kegiatan Posyandu rutin bulan Juni dilaksanakan di 5 titik dengan layanan imunisasi lengkap untuk balita dan pemeriksaan kesehatan ibu hamil...</p>
+                                <div class="news-meta mb-3">
+                                    <i class="fas fa-calendar me-1"></i>5 Juni 2025 | 
+                                    <i class="fas fa-user me-1"></i>Bidan Desa | 
+                                    <i class="fas fa-heart text-danger me-1"></i>45 | 
+                                    <i class="fas fa-comment me-1"></i>8
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" class="btn btn-info btn-sm">
+                                        <i class="fas fa-arrow-right me-1"></i>Baca Selengkapnya
+                                    </a>
+                                    <div>
+                                        <button class="btn btn-outline-secondary btn-sm me-1" title="Bagikan">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" title="Sukai">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- News Item 4 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card news-card h-100">
+                            <div class="position-relative">
+                                <img src="{% static 'images/news-4.jpg' %}" class="card-img-top" alt="Berita 4" style="height: 220px; object-fit: cover;">
+                                <span class="badge bg-warning text-dark category-badge">Ekonomi</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Pelatihan Digital Marketing untuk UMKM Desa Sumber Sari</h5>
+                                <p class="card-text text-muted">Dalam upaya meningkatkan daya saing UMKM lokal, Pemdes menyelenggarakan pelatihan digital marketing dengan narasumber dari Diskop UKM...</p>
+                                <div class="news-meta mb-3">
+                                    <i class="fas fa-calendar me-1"></i>4 Juni 2025 | 
+                                    <i class="fas fa-user me-1"></i>Kaur Ekonomi | 
+                                    <i class="fas fa-heart text-danger me-1"></i>62 | 
+                                    <i class="fas fa-comment me-1"></i>15
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-arrow-right me-1"></i>Baca Selengkapnya
+                                    </a>
+                                    <div>
+                                        <button class="btn btn-outline-secondary btn-sm me-1" title="Bagikan">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" title="Sukai">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- News Item 5 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card news-card h-100">
+                            <div class="position-relative">
+                                <img src="{% static 'images/news-5.jpg' %}" class="card-img-top" alt="Berita 5" style="height: 220px; object-fit: cover;">
+                                <span class="badge bg-danger category-badge">Budaya</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Festival Budaya Desa: Melestarikan Tradisi Jawa di Era Modern</h5>
+                                <p class="card-text text-muted">Festival budaya tahunan kembali digelar dengan menampilkan berbagai pertunjukan tradisional Jawa, pameran kerajinan, dan kuliner khas desa...</p>
+                                <div class="news-meta mb-3">
+                                    <i class="fas fa-calendar me-1"></i>3 Juni 2025 | 
+                                    <i class="fas fa-user me-1"></i>Seksi Budaya | 
+                                    <i class="fas fa-heart text-danger me-1"></i>156 | 
+                                    <i class="fas fa-comment me-1"></i>28
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-arrow-right me-1"></i>Baca Selengkapnya
+                                    </a>
+                                    <div>
+                                        <button class="btn btn-outline-secondary btn-sm me-1" title="Bagikan">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" title="Sukai">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- News Item 6 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card news-card h-100">
+                            <div class="position-relative">
+                                <img src="{% static 'images/news-6.jpg' %}" class="card-img-top" alt="Berita 6" style="height: 220px; object-fit: cover;">
+                                <span class="badge bg-secondary category-badge">Lingkungan</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Program Bank Sampah Raih Penghargaan Tingkat Kabupaten</h5>
+                                <p class="card-text text-muted">Bank Sampah "Sumber Bersih" berhasil meraih juara 2 kategori inovasi pengelolaan sampah tingkat kabupaten dengan omzet mencapai 50 juta per tahun...</p>
+                                <div class="news-meta mb-3">
+                                    <i class="fas fa-calendar me-1"></i>2 Juni 2025 | 
+                                    <i class="fas fa-user me-1"></i>Koordinator Bank Sampah | 
+                                    <i class="fas fa-heart text-danger me-1"></i>94 | 
+                                    <i class="fas fa-comment me-1"></i>18
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="#" class="btn btn-secondary btn-sm">
+                                        <i class="fas fa-arrow-right me-1"></i>Baca Selengkapnya
+                                    </a>
+                                    <div>
+                                        <button class="btn btn-outline-secondary btn-sm me-1" title="Bagikan">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" title="Sukai">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Load More Button -->
+                <div class="text-center mt-4">
+                    <button class="btn load-more-btn btn-lg" id="loadMoreNews">
+                        <i class="fas fa-plus me-2"></i>Muat Lebih Banyak Berita
+                    </button>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Navigation berita" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#">5</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Latest News Widget -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-fire me-2"></i>Berita Terpopuler</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <img src="{% static 'images/thumb-1.jpg' %}" class="me-3 rounded" width="60" height="60" style="object-fit: cover;">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Pembangunan Jalan Desa Tahap II</h6>
+                                        <small class="text-muted">8 Juni 2025 • 1,247 views</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <img src="{% static 'images/thumb-2.jpg' %}" class="me-3 rounded" width="60" height="60" style="object-fit: cover;">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Festival Budaya Desa 2025</h6>
+                                        <small class="text-muted">3 Juni 2025 • 892 views</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <img src="{% static 'images/thumb-3.jpg' %}" class="me-3 rounded" width="60" height="60" style="object-fit: cover;">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Bank Sampah Raih Penghargaan</h6>
+                                        <small class="text-muted">2 Juni 2025 • 756 views</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Widget -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-tags me-2"></i>Kategori Berita</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="#" class="badge bg-primary text-decoration-none fs-6 p-2">Pemerintahan (24)</a>
+                            <a href="#" class="badge bg-success text-decoration-none fs-6 p-2">Pembangunan (18)</a>
+                            <a href="#" class="badge bg-info text-decoration-none fs-6 p-2">Sosial (32)</a>
+                            <a href="#" class="badge bg-warning text-decoration-none fs-6 p-2">Ekonomi (15)</a>
+                            <a href="#" class="badge bg-danger text-decoration-none fs-6 p-2">Budaya (12)</a>
+                            <a href="#" class="badge bg-secondary text-decoration-none fs-6 p-2">Lingkungan (8)</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Archive Widget -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-archive me-2"></i>Arsip Berita</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <a href="#" class="text-decoration-none">
+                                    <i class="fas fa-calendar me-2"></i>Juni 2025 (28)
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="#" class="text-decoration-none">
+                                    <i class="fas fa-calendar me-2"></i>Mei 2025 (35)
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="#" class="text-decoration-none">
+                                    <i class="fas fa-calendar me-2"></i>April 2025 (42)
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="#" class="text-decoration-none">
+                                    <i class="fas fa-calendar me-2"></i>Maret 2025 (38)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Newsletter Widget -->
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-envelope me-2"></i>Newsletter</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Dapatkan berita terbaru langsung di email Anda!</p>
+                        <form>
+                            <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="Email Anda">
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100">
+                                <i class="fas fa-paper-plane me-2"></i>Berlangganan
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Search functionality
+document.getElementById('searchNews').addEventListener('keyup', function() {
+    // Add search logic here
+});
+
+// Load more functionality
+document.getElementById('loadMoreNews').addEventListener('click', function() {
+    // Add load more logic here
+    this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memuat...';
+    // Simulate loading
+    setTimeout(() => {
+        this.innerHTML = '<i class="fas fa-plus me-2"></i>Muat Lebih Banyak Berita';
+    }, 2000);
+});
+
+// Filter functionality
+document.getElementById('categoryFilter').addEventListener('change', function() {
+    // Add category filter logic here
+});
+
+document.getElementById('dateFilter').addEventListener('change', function() {
+    // Add date filter logic here
+});
+
+document.getElementById('sortFilter').addEventListener('change', function() {
+    // Add sort logic here
+});
+</script>
+{% endblock %}

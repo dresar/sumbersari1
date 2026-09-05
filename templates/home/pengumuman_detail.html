@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ pengumuman.judul }} - Portal Desa Sumber Sari{% endblock %}
+
+{% block extra_css %}
+<style>
+.detail-hero {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    color: #212529;
+    padding: 60px 0;
+}
+
+.priority-banner {
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.priority-urgent {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.priority-tinggi {
+    background: linear-gradient(135deg, #fd7e14, #e8590c);
+    color: white;
+}
+
+.priority-sedang {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+}
+
+.priority-rendah {
+    background: #6c757d;
+    color: white;
+}
+
+.content-section {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+.share-buttons {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.countdown-timer {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.time-unit {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 5px;
+    min-width: 80px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="detail-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb bg-white bg-opacity-20 rounded p-3">
+                <li class="breadcrumb-item"><a href="{% url 'home:index' %}" class="text-dark">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'home:pengumuman_list' %}" class="text-dark">Pengumuman</a></li>
+                <li class="breadcrumb-item active">{{ pengumuman.judul|truncatewords:5 }}</li>
+            </ol>
+        </nav>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-3">{{ pengumuman.judul }}</h1>
+                <div class="d-flex flex-wrap gap-3 mb-3">
+                    <span class="badge bg-dark bg-opacity-50 px-3 py-2">
+                        <i class="fas fa-calendar me-1"></i>{{ pengumuman.tanggal_mulai|date:"d M Y" }}
+                    </span>
+                    <span class="badge bg-dark bg-opacity-50 px-3 py-2">
+                        <i class="fas fa-clock me-1"></i>{{ pengumuman.dibuat|timesince }} lalu
+                    </span>
+                    <span class="badge bg-dark bg-opacity-50 px-3 py-2">
+                        <i class="fas fa-user me-1"></i>Admin Desa
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Priority Banner -->
+                <div class="priority-banner priority-{{ pengumuman.prioritas }}">
+                    {% if pengumuman.prioritas == 'urgent' %}
+                        <h4><i class="fas fa-bolt me-2"></i>PENGUMUMAN URGENT</h4>
+                        <p class="mb-0">Segera dibaca dan ditindaklanjuti oleh seluruh warga</p>
+                    {% elif pengumuman.prioritas == 'tinggi' %}
+                        <h4><i class="fas fa-exclamation-triangle me-2"></i>PRIORITAS TINGGI</h4>
+                        <p class="mb-0">Pengumuman penting yang memerlukan perhatian khusus</p>
+                    {% elif pengumuman.prioritas == 'sedang' %}
+                        <h4><i class="fas fa-info-circle me-2"></i>INFORMASI PENTING</h4>
+                        <p class="mb-0">Informasi yang perlu diketahui seluruh warga desa</p>
+                    {% else %}
+                        <h4><i class="fas fa-bell me-2"></i>PEMBERITAHUAN</h4>
+                        <p class="mb-0">Informasi umum untuk warga desa</p>
+                    {% endif %}
+                </div>
+
+                <!-- Content -->
+                <div class="content-section">
+                    <div class="content-text">
+                        {{ pengumuman.isi|linebreaks }}
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary"><i class="fas fa-calendar-start me-2"></i>Tanggal Mulai</h6>
+                            <p>{{ pengumuman.tanggal_mulai|date:"l, d F Y H:i" }} WIB</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-danger"><i class="fas fa-calendar-times me-2"></i>Tanggal Berakhir</h6>
+                            <p>{{ pengumuman.tanggal_berakhir|date:"l, d F Y H:i" }} WIB</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share Section -->
+                <div class="share-buttons">
+                    <h5 class="mb-3"><i class="fas fa-share-alt me-2"></i>Bagikan Pengumuman</h5>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="btn btn-primary" onclick="shareToFacebook()">
+                            <i class="fab fa-facebook-f me-1"></i>Facebook
+                        </a>
+                        <a href="#" class="btn btn-info" onclick="shareToTwitter()">
+                            <i class="fab fa-twitter me-1"></i>Twitter
+                        </a>
+                        <a href="#" class="btn btn-success" onclick="shareToWhatsApp()">
+                            <i class="fab fa-whatsapp me-1"></i>WhatsApp
+                        </a>
+                        <button class="btn btn-secondary" onclick="copyToClipboard()">
+                            <i class="fas fa-copy me-1"></i>Salin Link
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Countdown Timer -->
+                {% if pengumuman.tanggal_berakhir > today %}
+                <div class="countdown-timer">
+                    <h5><i class="fas fa-hourglass-half me-2"></i>Berakhir Dalam</h5>
+                    <div class="d-flex justify-content-center flex-wrap" id="countdown">
+                        <div class="time-unit">
+                            <div class="h3 mb-0" id="days">--</div>
+                            <small>Hari</small>
+                        </div>
+                        <div class="time-unit">
+                            <div class="h3 mb-0" id="hours">--</div>
+                            <small>Jam</small>
+                        </div>
+                        <div class="time-unit">
+                            <div class="h3 mb-0" id="minutes">--</div>
+                            <small>Menit</small>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Quick Contact -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-phone me-2"></i>Butuh Informasi?</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Hubungi kami untuk informasi lebih lanjut:</p>
+                        <div class="d-grid gap-2">
+                            <a href="tel:+6227412345" class="btn btn-outline-primary">
+                                <i class="fas fa-phone me-2"></i>(0274) 123-4567
+                            </a>
+                            <a href="https://wa.me/6281234567890" class="btn btn-outline-success">
+                                <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                            </a>
+                            <a href="{% url 'home:kontak' %}" class="btn btn-outline-info">
+                                <i class="fas fa-envelope me-2"></i>Form Kontak
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Announcements -->
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Pengumuman Lainnya</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <h6 class="mb-1">Penyaluran BLT Tahap II</h6>
+                                <small class="text-muted">Dimulai 15 Juni 2025</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <h6 class="mb-1">Vaksinasi COVID-19 Booster</h6>
+                                <small class="text-muted">Setiap hari Rabu</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <h6 class="mb-1">Pendaftaran UMKM Online</h6>
+                                <small class="text-muted">Batas 30 Juni 2025</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Countdown Timer
+{% if pengumuman.tanggal_berakhir > today %}
+const endDate = new Date('{{ pengumuman.tanggal_berakhir|date:"Y-m-d H:i:s" }}').getTime();
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = endDate - now;
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+    document.getElementById('days').textContent = days;
+    document.getElementById('hours').textContent = hours;
+    document.getElementById('minutes').textContent = minutes;
+
+    if (distance < 0) {
+        document.getElementById('countdown').innerHTML = '<div class="alert alert-danger">Pengumuman telah berakhir</div>';
+    }
+}
+
+updateCountdown();
+setInterval(updateCountdown, 60000); // Update every minute
+{% endif %}
+
+// Share functions
+function shareToFacebook() {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+}
+
+function shareToTwitter() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('{{ pengumuman.judul }}');
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+}
+
+function shareToWhatsApp() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('{{ pengumuman.judul }} - {{ url }}');
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+}
+
+function copyToClipboard() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('Link berhasil disalin!');
+    });
+}
+</script>
+{% endblock %}

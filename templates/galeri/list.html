@@ -1,0 +1,893 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Galeri Foto & Video - Portal Desa Sumber Sari{% endblock %}
+
+{% block extra_css %}
+<style>
+.gallery-hero {
+    background: linear-gradient(135deg, #e83e8c 0%, #fd7e14 100%);
+    color: white;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('{% static "images/camera-pattern.png" %}') repeat;
+    opacity: 0.1;
+}
+
+.gallery-nav {
+    background: white;
+    border-radius: 50px;
+    padding: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 40px;
+    transition: all 0.3s ease;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.nav-btn.active,
+.nav-btn:hover {
+    background: linear-gradient(135deg, #e83e8c, #fd7e14);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(232,62,140,0.4);
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+.gallery-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover .gallery-image {
+    transform: scale(1.1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    opacity: 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-info {
+    color: white;
+    width: 100%;
+}
+
+.gallery-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.gallery-meta {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.gallery-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+}
+
+.video-badge {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.photo-badge {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #dc3545;
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover .play-button {
+    background: white;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.featured-gallery {
+    background: linear-gradient(135deg, #6f42c1, #5a32a3);
+    color: white;
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+.featured-gallery::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: url('{% static "images/sparkle.png" %}') repeat;
+    opacity: 0.1;
+    animation: sparkle 20s linear infinite;
+}
+
+@keyframes sparkle {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.masonry-grid {
+    column-count: 3;
+    column-gap: 20px;
+}
+
+.masonry-item {
+    break-inside: avoid;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .masonry-grid {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 576px) {
+    .masonry-grid {
+        column-count: 1;
+    }
+}
+
+.lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-content {
+    max-width: 90%;
+    max-height: 90%;
+    position: relative;
+}
+
+.lightbox-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    padding: 20px 15px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.lightbox-nav:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.lightbox-prev {
+    left: -60px;
+}
+
+.lightbox-next {
+    right: -60px;
+}
+
+.stats-counter {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+}
+
+.counter-item {
+    margin-bottom: 20px;
+}
+
+.counter-number {
+    font-size: 3rem;
+    font-weight: bold;
+    display: block;
+    line-height: 1;
+}
+
+.counter-label {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.upload-section {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #212529;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.category-filter {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+.filter-chip {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    color: #6c757d;
+    padding: 8px 20px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    margin: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.filter-chip:hover,
+.filter-chip.active {
+    background: linear-gradient(135deg, #e83e8c, #fd7e14);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.load-more-gallery {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border: none;
+    color: white;
+    padding: 15px 40px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.load-more-gallery:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(40,167,69,0.4);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Gallery Hero Section -->
+<section class="gallery-hero">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-camera me-3"></i>Galeri Desa Sumber Sari
+                </h1>
+                <p class="lead mb-4">Dokumentasi visual kegiatan, pembangunan, dan kehidupan sehari-hari masyarakat Desa Sumber Sari</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-images fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>2,456 Foto</strong>
+                            <br><small>Koleksi Lengkap</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-video fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>124 Video</strong>
+                            <br><small>HD Quality</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-eye fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>45.2K Views</strong>
+                            <br><small>Total Pengunjung</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="stats-counter">
+                    <div class="counter-item">
+                        <span class="counter-number">8</span>
+                        <span class="counter-label">Kategori</span>
+                    </div>
+                    <div class="counter-item">
+                        <span class="counter-number">156</span>
+                        <span class="counter-label">Album</span>
+                    </div>
+                    <div class="counter-item">
+                        <span class="counter-number">2.5K</span>
+                        <span class="counter-label">Media</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Gallery -->
+<section class="py-5">
+    <div class="container">
+        <div class="featured-gallery">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h3><i class="fas fa-star me-3"></i>Galeri Unggulan</h3>
+                    <h2 class="display-6 fw-bold mb-3">Festival Budaya Desa Sumber Sari 2025</h2>
+                    <p class="lead mb-4">Dokumentasi lengkap acara festival budaya tahunan yang menampilkan kekayaan tradisi dan budaya lokal Desa Sumber Sari.</p>
+                    <div class="d-flex gap-3">
+                        <span class="badge bg-white text-dark px-3 py-2">
+                            <i class="fas fa-images me-1"></i>87 Foto
+                        </span>
+                        <span class="badge bg-white text-dark px-3 py-2">
+                            <i class="fas fa-video me-1"></i>12 Video
+                        </span>
+                        <span class="badge bg-white text-dark px-3 py-2">
+                            <i class="fas fa-calendar me-1"></i>25 Mei 2025
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <button class="btn btn-light btn-lg">
+                        <i class="fas fa-play me-2"></i>Lihat Album
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Navigation -->
+<section class="py-4">
+    <div class="container">
+        <div class="gallery-nav text-center">
+            <button class="nav-btn active" data-filter="all">
+                <i class="fas fa-th me-2"></i>Semua Media
+            </button>
+            <button class="nav-btn" data-filter="foto">
+                <i class="fas fa-camera me-2"></i>Foto
+            </button>
+            <button class="nav-btn" data-filter="video">
+                <i class="fas fa-video me-2"></i>Video
+            </button>
+            <button class="nav-btn" data-filter="kegiatan">
+                <i class="fas fa-calendar-alt me-2"></i>Kegiatan
+            </button>
+            <button class="nav-btn" data-filter="pembangunan">
+                <i class="fas fa-hammer me-2"></i>Pembangunan
+            </button>
+            <button class="nav-btn" data-filter="budaya">
+                <i class="fas fa-masks-theater me-2"></i>Budaya
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Category Filter -->
+<section class="py-4">
+    <div class="container">
+        <div class="category-filter">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h5 class="mb-3 mb-lg-0"><i class="fas fa-filter me-2 text-primary"></i>Filter Berdasarkan:</h5>
+                </div>
+                <div class="col-lg-6">
+                    <div class="d-flex flex-wrap justify-content-lg-end">
+                        <span class="filter-chip active" data-category="semua">Semua</span>
+                        <span class="filter-chip" data-category="2025">2025</span>
+                        <span class="filter-chip" data-category="2024">2024</span>
+                        <span class="filter-chip" data-category="populer">Populer</span>
+                        <span class="filter-chip" data-category="terbaru">Terbaru</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Grid -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <!-- Masonry Gallery Grid -->
+                <div class="masonry-grid" id="galleryGrid">
+                    <!-- Gallery Item 1 - Video -->
+                    <div class="masonry-item" data-type="video" data-category="kegiatan">
+                        <div class="gallery-item" data-src="{% static 'videos/gotong-royong.mp4' %}" data-type="video">
+                            <img src="{% static 'images/gallery/gotong-royong-thumb.jpg' %}" alt="Gotong Royong" class="gallery-image">
+                            <div class="gallery-badge">
+                                <span class="video-badge">
+                                    <i class="fas fa-play me-1"></i>Video
+                                </span>
+                            </div>
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="gallery-overlay">
+                                <div class="gallery-info">
+                                    <div class="gallery-title">Gotong Royong Pembersihan Lingkungan</div>
+                                    <div class="gallery-meta">
+                                        <i class="fas fa-calendar me-1"></i>5 Juni 2025 | 
+                                        <i class="fas fa-eye me-1"></i>247 views
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Item 2 - Photo -->
+                    <div class="masonry-item" data-type="foto" data-category="pembangunan">
+                        <div class="gallery-item" data-src="{% static 'images/gallery/jalan-baru.jpg' %}" data-type="image">
+                            <img src="{% static 'images/gallery/jalan-baru.jpg' %}" alt="Pembangunan Jalan" class="gallery-image">
+                            <div class="gallery-badge">
+                                <span class="photo-badge">
+                                    <i class="fas fa-camera me-1"></i>Foto
+                                </span>
+                            </div>
+                            <div class="gallery-overlay">
+                                <div class="gallery-info">
+                                    <div class="gallery-title">Pembangunan Jalan Desa Tahap II</div>
+                                    <div class="gallery-meta">
+                                        <i class="fas fa-calendar me-1"></i>8 Juni 2025 | 
+                                        <i class="fas fa-heart text-danger me-1"></i>89 likes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Item 3 - Photo -->
+                    <div class="masonry-item" data-type="foto" data-category="budaya">
+                        <div class="gallery-item" data-src="{% static 'images/gallery/festival-budaya.jpg' %}" data-type="image">
+                            <img src="{% static 'images/gallery/festival-budaya.jpg' %}" alt="Festival Budaya" class="gallery-image">
+                            <div class="gallery-badge">
+                                <span class="photo-badge">
+                                    <i class="fas fa-camera me-1"></i>Foto
+                                </span>
+                            </div>
+                            <div class="gallery-overlay">
+                                <div class="gallery-info">
+                                    <div class="gallery-title">Festival Budaya Desa 2025</div>
+                                    <div class="gallery-meta">
+                                        <i class="fas fa-calendar me-1"></i>25 Mei 2025 | 
+                                        <i class="fas fa-heart text-danger me-1"></i>156 likes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Item 4 - Video -->
+                    <div class="masonry-item" data-type="video" data-category="kegiatan">
+                        <div class="gallery-item" data-src="{% static 'videos/posyandu.mp4' %}" data-type="video">
+                            <img src="{% static 'images/gallery/posyandu-thumb.jpg' %}" alt="Posyandu" class="gallery-image">
+                            <div class="gallery-badge">
+                                <span class="video-badge">
+                                    <i class="fas fa-play me-1"></i>Video
+                                </span>
+                            </div>
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="gallery-overlay">
+                                <div class="gallery-info">
+                                    <div class="gallery-title">Kegiatan Posyandu Balita</div>
+                                    <div class="gallery-meta">
+                                        <i class="fas fa-calendar me-1"></i>15 Mei 2025 | 
+                                        <i class="fas fa-eye me-1"></i>132 views
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Item 5 - Photo -->
+                    <div class="masonry-item" data-type="foto" data-category="kegiatan">
+                        <div class="gallery-item" data-src="{% static 'images/gallery/rapat-bpd.jpg' %}" data-type="image">
+                            <img src="{% static 'images/gallery/rapat-bpd.jpg' %}" alt="Rapat BPD" class="gallery-image">
+                            <div class="gallery-badge">
+                                <span class="photo-badge">
+                                    <i class="fas fa-camera me-1"></i>Foto
+                                </span>
+                            </div>
+                            <div class="gallery-overlay">
+                                <div class="gallery-info">
+                                    <div class="gallery-title">Rapat Koordinasi BPD dan Perangkat Desa</div>
+                                    <div class="gallery-meta">
+                                        <i class="fas fa-calendar me-1"></i>7 Juni 2025 | 
+                                        <i class="fas fa-heart text-danger me-1"></i>34 likes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Item 6 - Photo -->
+                    <div class="masonry-item" data-type="foto" data-category="pembangunan">
+                        <div class="gallery-item" data-src="{% static 'images/gallery/bedah-rumah.jpg' %}" data-type="image">
+                            <img src="{% static 'images/gallery/bedah-rumah.jpg' %}" alt="Bedah Rumah" class="gallery-image">
+                            <div class="gallery-badge">
+                                <span class="photo-badge">
+                                    <i class="fas fa-camera me-1"></i>Foto
+                                </span>
+                            </div>
+                            <div class="gallery-overlay">
+                                <div class="gallery-info">
+                                    <div class="gallery-title">Program Bedah Rumah RTLH</div>
+                                    <div class="gallery-meta">
+                                        <i class="fas fa-calendar me-1"></i>20 Mei 2025 | 
+                                        <i class="fas fa-heart text-danger me-1"></i>67 likes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Item 7 - Video -->
+                    <div class="masonry-item" data-type="video" data-category="budaya">
+                        <div class="gallery-item" data-src="{% static 'videos/tari-tradisional.mp4' %}" data-type="video">
+                            <img src="{% static 'images/gallery/tari-tradisional-thumb.jpg' %}" alt="Tari Tradisional" class="gallery-image">
+                            <div class="gallery-badge">
+                                <span class="video-badge">
+                                    <i class="fas fa-play me-1"></i>Video
+                                </span>
+                            </div>
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="gallery-overlay">
+                                <div class="gallery-info">
+                                    <div class="gallery-title">Pertunjukan Tari Tradisional Jawa</div>
+                                    <div class="gallery-meta">
+                                        <i class="fas fa-calendar me-1"></i>25 Mei 2025 | 
+                                        <i class="fas fa-eye me-1"></i>389 views
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Item 8 - Photo -->
+                    <div class="masonry-item" data-type="foto" data-category="kegiatan">
+                        <div class="gallery-item" data-src="{% static 'images/gallery/pelatihan-umkm.jpg' %}" data-type="image">
+                            <img src="{% static 'images/gallery/pelatihan-umkm.jpg' %}" alt="Pelatihan UMKM" class="gallery-image">
+                            <div class="gallery-badge">
+                                <span class="photo-badge">
+                                    <i class="fas fa-camera me-1"></i>Foto
+                                </span>
+                            </div>
+                            <div class="gallery-overlay">
+                                <div class="gallery-info">
+                                    <div class="gallery-title">Pelatihan Digital Marketing UMKM</div>
+                                    <div class="gallery-meta">
+                                        <i class="fas fa-calendar me-1"></i>4 Juni 2025 | 
+                                        <i class="fas fa-heart text-danger me-1"></i>45 likes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Load More Button -->
+                <div class="text-center mt-5">
+                    <button class="btn load-more-gallery btn-lg" id="loadMoreGallery">
+                        <i class="fas fa-plus me-2"></i>Muat Lebih Banyak
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <!-- Upload Section -->
+                <div class="upload-section mb-4">
+                    <h5><i class="fas fa-cloud-upload-alt me-2"></i>Kontribusi Media</h5>
+                    <p class="mb-3">Punya foto atau video kegiatan desa? Bagikan dengan kami!</p>
+                    <button class="btn btn-dark">
+                        <i class="fas fa-upload me-2"></i>Upload Media
+                    </button>
+                </div>
+
+                <!-- Popular Albums -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-fire me-2"></i>Album Populer</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <img src="{% static 'images/gallery/album-1.jpg' %}" class="me-3 rounded" width="60" height="60" style="object-fit: cover;">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Festival Budaya 2025</h6>
+                                        <small class="text-muted">87 foto • 12 video</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <img src="{% static 'images/gallery/album-2.jpg' %}" class="me-3 rounded" width="60" height="60" style="object-fit: cover;">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Pembangunan Infrastruktur</h6>
+                                        <small class="text-muted">45 foto • 8 video</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex">
+                                    <img src="{% static 'images/gallery/album-3.jpg' %}" class="me-3 rounded" width="60" height="60" style="object-fit: cover;">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Kegiatan Sosial</h6>
+                                        <small class="text-muted">62 foto • 5 video</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Stats -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Statistik Galeri</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="h4 text-primary mb-0">2,456</div>
+                                <small class="text-muted">Total Foto</small>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="h4 text-success mb-0">124</div>
+                                <small class="text-muted">Total Video</small>
+                            </div>
+                            <div class="col-6">
+                                <div class="h4 text-warning mb-0">156</div>
+                                <small class="text-muted">Album</small>
+                            </div>
+                            <div class="col-6">
+                                <div class="h4 text-danger mb-0">45.2K</div>
+                                <small class="text-muted">Views</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Aktivitas Terbaru</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item mb-3">
+                                <div class="timeline-marker bg-primary"></div>
+                                <div class="timeline-content">
+                                    <small class="text-muted">2 jam lalu</small>
+                                    <p class="mb-0 small">12 foto baru ditambahkan ke album "Gotong Royong"</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item mb-3">
+                                <div class="timeline-marker bg-success"></div>
+                                <div class="timeline-content">
+                                    <small class="text-muted">5 jam lalu</small>
+                                    <p class="mb-0 small">Video "Pembangunan Jalan" mencapai 500 views</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-info"></div>
+                                <div class="timeline-content">
+                                    <small class="text-muted">1 hari lalu</small>
+                                    <p class="mb-0 small">Album "Festival Budaya" dibuat</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox-overlay" id="lightbox">
+    <div class="lightbox-content">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-nav lightbox-prev" onclick="prevImage()">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="lightbox-nav lightbox-next" onclick="nextImage()">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        <img class="lightbox-image" id="lightboxImage" src="" alt="">
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Gallery filter functionality
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filter = this.dataset.filter;
+        const items = document.querySelectorAll('.masonry-item');
+        
+        items.forEach(item => {
+            if (filter === 'all' || item.dataset.type === filter || item.dataset.category === filter) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Category filter
+document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        // Add filter logic here
+    });
+});
+
+// Lightbox functionality
+let currentImageIndex = 0;
+let images = [];
+
+document.querySelectorAll('.gallery-item').forEach((item, index) => {
+    item.addEventListener('click', function() {
+        if (this.dataset.type === 'image') {
+            images = Array.from(document.querySelectorAll('.gallery-item[data-type="image"]'));
+            currentImageIndex = images.indexOf(this);
+            showLightbox(this.dataset.src);
+        } else if (this.dataset.type === 'video') {
+            // Handle video playback
+            alert('Video player would open here: ' + this.dataset.src);
+        }
+    });
+});
+
+function showLightbox(src) {
+    document.getElementById('lightboxImage').src = src;
+    document.getElementById('lightbox').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function nextImage() {
+    currentImageIndex = (currentImageIndex + 1) % images.length;
+    document.getElementById('lightboxImage').src = images[currentImageIndex].dataset.src;
+}
+
+function prevImage() {
+    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+    document.getElementById('lightboxImage').src = images[currentImageIndex].dataset.src;
+}
+
+// Load more functionality
+document.getElementById('loadMoreGallery').addEventListener('click', function() {
+    this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memuat...';
+    
+    // Simulate loading
+    setTimeout(() => {
+        this.innerHTML = '<i class="fas fa-plus me-2"></i>Muat Lebih Banyak';
+        // Add more gallery items here
+    }, 2000);
+});
+
+// Close lightbox on ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeLightbox();
+    }
+});
+</script>
+{% endblock %}

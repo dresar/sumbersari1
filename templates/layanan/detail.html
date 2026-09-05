@@ -1,0 +1,542 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ layanan.nama }} - Portal Desa Sumber Sari{% endblock %}
+
+{% block extra_css %}
+<style>
+.service-hero {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 80px 0;
+}
+
+.service-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+    margin-top: -60px;
+    position: relative;
+    z-index: 10;
+}
+
+.step-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.step-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 20px;
+}
+
+.requirement-card {
+    background: #f8f9fa;
+    border-left: 5px solid #007bff;
+    border-radius: 0 10px 10px 0;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.info-box {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.form-section {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 40px 0;
+}
+
+.download-section {
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+}
+
+.faq-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.faq-item {
+    border-bottom: 1px solid #e9ecef;
+    padding: 20px 0;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-question {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    display: flex;
+    justify-content: between;
+    align-items: center;
+}
+
+.faq-answer {
+    display: none;
+    padding-top: 15px;
+    color: #6c757d;
+}
+
+.category-info {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+.status-tracker {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.status-step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.status-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    width: 2px;
+    height: 40px;
+    background: #e9ecef;
+}
+
+.status-step.completed::after {
+    background: #28a745;
+}
+
+.status-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    background: #e9ecef;
+    color: #6c757d;
+}
+
+.status-step.completed .status-icon {
+    background: #28a745;
+    color: white;
+}
+
+.status-step.active .status-icon {
+    background: #ffc107;
+    color: #212529;
+}
+
+.testimonial-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+.rating {
+    color: #ffc107;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Service Hero -->
+<section class="service-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb bg-white bg-opacity-20 rounded p-3">
+                <li class="breadcrumb-item"><a href="{% url 'home:index' %}" class="text-white">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'layanan:list' %}" class="text-white">Layanan</a></li>
+                <li class="breadcrumb-item active">{{ layanan.nama|truncatewords:3 }}</li>
+            </ol>
+        </nav>
+        
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">{{ layanan.nama }}</h1>
+                <p class="lead mb-4">{{ layanan.deskripsi }}</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <span class="badge bg-white text-dark px-3 py-2">
+                        <i class="fas fa-tag me-1"></i>{{ layanan.kategori.nama }}
+                    </span>
+                    <span class="badge bg-white text-dark px-3 py-2">
+                        <i class="fas fa-clock me-1"></i>{{ layanan.waktu_penyelesaian }}
+                    </span>
+                    <span class="badge bg-white text-dark px-3 py-2">
+                        <i class="fas fa-money-bill me-1"></i>{{ layanan.biaya }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="info-box">
+                    <div class="info-item">
+                        <h5><i class="fas fa-clock me-2"></i>Waktu Proses</h5>
+                        <div class="h3">{{ layanan.waktu_penyelesaian }}</div>
+                    </div>
+                    <div class="info-item">
+                        <h5><i class="fas fa-money-bill me-2"></i>Biaya</h5>
+                        <div class="h3">{{ layanan.biaya }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <!-- Main Content -->
+        <div class="service-content">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Description -->
+                    <div class="mb-5">
+                        <h3 class="text-primary mb-4"><i class="fas fa-info-circle me-2"></i>Deskripsi Layanan</h3>
+                        <p class="lead">{{ layanan.deskripsi }}</p>
+                    </div>
+
+                    <!-- Requirements -->
+                    <div class="mb-5">
+                        <h3 class="text-primary mb-4"><i class="fas fa-list-check me-2"></i>Persyaratan</h3>
+                        <div class="requirement-card">
+                            {{ layanan.persyaratan|linebreaks }}
+                        </div>
+                    </div>
+
+                    <!-- Procedure Steps -->
+                    <div class="mb-5">
+                        <h3 class="text-primary mb-4"><i class="fas fa-route me-2"></i>Prosedur Pengajuan</h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="step-card">
+                                    <div class="step-number">1</div>
+                                    <h5 class="fw-bold mb-3">Persiapan Dokumen</h5>
+                                    <p class="text-muted">Siapkan semua dokumen yang diperlukan sesuai dengan daftar persyaratan yang telah ditentukan.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="step-card">
+                                    <div class="step-number">2</div>
+                                    <h5 class="fw-bold mb-3">Pengajuan Permohonan</h5>
+                                    <p class="text-muted">Datang ke kantor desa atau ajukan melalui layanan online dengan membawa dokumen lengkap.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="step-card">
+                                    <div class="step-number">3</div>
+                                    <h5 class="fw-bold mb-3">Verifikasi & Validasi</h5>
+                                    <p class="text-muted">Petugas akan memverifikasi kelengkapan dan kebenaran dokumen yang Anda ajukan.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="step-card">
+                                    <div class="step-number">4</div>
+                                    <h5 class="fw-bold mb-3">Penyelesaian</h5>
+                                    <p class="text-muted">Dokumen selesai diproses dan siap diambil sesuai jadwal yang telah ditentukan.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Procedure Detail -->
+                    <div class="mb-5">
+                        <h4 class="text-success mb-3"><i class="fas fa-cogs me-2"></i>Detail Prosedur</h4>
+                        <div class="bg-light p-4 rounded">
+                            {{ layanan.prosedur|linebreaks }}
+                        </div>
+                    </div>
+
+                    <!-- FAQ Section -->
+                    <div class="faq-section">
+                        <h3 class="text-primary mb-4"><i class="fas fa-question-circle me-2"></i>Pertanyaan yang Sering Diajukan</h3>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">
+                                Berapa lama waktu yang dibutuhkan untuk penyelesaian?
+                                <i class="fas fa-chevron-down ms-auto"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Waktu penyelesaian untuk layanan {{ layanan.nama }} adalah {{ layanan.waktu_penyelesaian }}. Namun, waktu dapat bervariasi tergantung kelengkapan dokumen dan beban kerja saat itu.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">
+                                Apakah bisa diwakilkan oleh orang lain?
+                                <i class="fas fa-chevron-down ms-auto"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Ya, layanan ini dapat diwakilkan dengan membawa surat kuasa bermaterai dan fotokopi KTP pemberi kuasa serta penerima kuasa.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">
+                                Bagaimana jika dokumen ditolak?
+                                <i class="fas fa-chevron-down ms-auto"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Jika dokumen ditolak, petugas akan memberikan alasan penolakan dan panduan untuk melengkapi kekurangan dokumen.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">
+                                Apakah ada layanan online untuk {{ layanan.nama }}?
+                                <i class="fas fa-chevron-down ms-auto"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Ya, layanan ini tersedia secara online. Anda dapat mengajukan permohonan melalui portal online desa dengan upload dokumen digital.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Quick Action -->
+                    <div class="form-section mb-4">
+                        <h5 class="text-center mb-4"><i class="fas fa-rocket me-2"></i>Ajukan Sekarang</h5>
+                        <div class="d-grid gap-3">
+                            <a href="{% url 'layanan:formulir' layanan.id %}" class="btn btn-success btn-lg">
+                                <i class="fas fa-file-alt me-2"></i>Ajukan Online
+                            </a>
+                            <a href="tel:+6227412345" class="btn btn-outline-primary">
+                                <i class="fas fa-phone me-2"></i>Hubungi Kami
+                            </a>
+                            <a href="https://wa.me/6281234567890" class="btn btn-outline-success">
+                                <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Category Info -->
+                    <div class="category-info">
+                        <h5 class="text-primary mb-3">
+                            <i class="{{ layanan.kategori.icon }} me-2"></i>{{ layanan.kategori.nama }}
+                        </h5>
+                        <p class="text-muted">Kategori layanan yang berhubungan dengan administrasi kependudukan dan pelayanan publik di Desa Sumber Sari.</p>
+                        <a href="{% url 'layanan:list' %}?kategori={{ layanan.kategori.id }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-list me-1"></i>Lihat Layanan Lain
+                        </a>
+                    </div>
+
+                    <!-- Status Tracker -->
+                    <div class="status-tracker mb-4">
+                        <h5 class="mb-4"><i class="fas fa-tasks me-2"></i>Lacak Status Pengajuan</h5>
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">Nomor Permohonan</label>
+                                <input type="text" class="form-control" placeholder="Masukkan nomor permohonan">
+                            </div>
+                            <button type="submit" class="btn btn-info w-100">
+                                <i class="fas fa-search me-1"></i>Lacak Status
+                            </button>
+                        </form>
+                        
+                        <!-- Sample Status Display -->
+                        <div class="mt-4">
+                            <h6 class="text-muted">Contoh Status:</h6>
+                            <div class="status-step completed">
+                                <div class="status-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">Permohonan Diterima</div>
+                                    <small class="text-muted">Dokumen telah diterima dan terdaftar</small>
+                                </div>
+                            </div>
+                            <div class="status-step completed">
+                                <div class="status-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">Verifikasi</div>
+                                    <small class="text-muted">Dokumen sedang diverifikasi</small>
+                                </div>
+                            </div>
+                            <div class="status-step active">
+                                <div class="status-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">Proses</div>
+                                    <small class="text-muted">Sedang dalam proses penyelesaian</small>
+                                </div>
+                            </div>
+                            <div class="status-step">
+                                <div class="status-icon">
+                                    <i class="fas fa-file-check"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">Selesai</div>
+                                    <small class="text-muted">Dokumen siap diambil</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Download Forms -->
+                    <div class="download-section mb-4">
+                        <h5 class="mb-3"><i class="fas fa-download me-2"></i>Unduh Formulir</h5>
+                        <p class="mb-3">Download formulir yang diperlukan untuk pengajuan layanan ini</p>
+                        <div class="d-grid gap-2">
+                            <a href="#" class="btn btn-outline-danger">
+                                <i class="fas fa-file-pdf me-2"></i>Formulir Permohonan.pdf
+                            </a>
+                            <a href="#" class="btn btn-outline-success">
+                                <i class="fas fa-file-excel me-2"></i>Template Data.xlsx
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Testimonials -->
+                    <div class="testimonial-card">
+                        <h5 class="mb-3"><i class="fas fa-star me-2 text-warning"></i>Testimoni Warga</h5>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="bg-primary rounded-circle p-2 text-white me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">Siti Aminah</div>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="small text-muted">"Pelayanan sangat cepat dan ramah. Hanya butuh 1 hari untuk selesai."</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="bg-success rounded-circle p-2 text-white me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">Bambang Sutrisno</div>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="small text-muted">"Prosesnya transparan dan bisa dilacak statusnya. Sangat membantu."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// FAQ Toggle
+function toggleFAQ(button) {
+    const answer = button.nextElementSibling;
+    const icon = button.querySelector('i');
+    
+    if (answer.style.display === 'block') {
+        answer.style.display = 'none';
+        icon.className = 'fas fa-chevron-down ms-auto';
+    } else {
+        // Close all other FAQs
+        document.querySelectorAll('.faq-answer').forEach(ans => ans.style.display = 'none');
+        document.querySelectorAll('.faq-question i').forEach(ico => ico.className = 'fas fa-chevron-down ms-auto');
+        
+        // Open current FAQ
+        answer.style.display = 'block';
+        icon.className = 'fas fa-chevron-up ms-auto';
+    }
+}
+
+// Status tracking form
+document.querySelector('.status-tracker form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const nomor = this.querySelector('input').value;
+    if (nomor) {
+        alert(`Mencari status untuk nomor permohonan: ${nomor}`);
+    } else {
+        alert('Silakan masukkan nomor permohonan');
+    }
+});
+</script>
+{% endblock %}

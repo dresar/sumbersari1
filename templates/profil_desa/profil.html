@@ -1,0 +1,1077 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profil Lengkap Desa - Portal Desa Sumber Sari{% endblock %}
+
+{% block extra_css %}
+<style>
+.profile-hero {
+    background: linear-gradient(135deg, #6f42c1 0%, #495057 100%);
+    color: white;
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('{% static "images/village-pattern.svg" %}') repeat;
+    opacity: 0.1;
+}
+
+.section-divider {
+    height: 4px;
+    background: linear-gradient(135deg, #6f42c1, #495057);
+    border-radius: 2px;
+    margin: 50px 0;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #6f42c1, #495057);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 40px;
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-left: 20px;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -35px;
+    top: 25px;
+    width: 16px;
+    height: 16px;
+    background: #6f42c1;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.timeline-year {
+    background: linear-gradient(135deg, #6f42c1, #495057);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.org-structure {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 30px 0;
+}
+
+.org-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.org-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #6f42c1, #495057);
+}
+
+.org-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.org-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #f8f9fa;
+    margin-bottom: 15px;
+}
+
+.org-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #495057;
+    margin-bottom: 5px;
+}
+
+.org-position {
+    color: #6f42c1;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.org-contact {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.vision-mission {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 40px 0;
+}
+
+.vision-card, .mission-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    height: 100%;
+}
+
+.vision-card {
+    border-left: 5px solid #2196f3;
+}
+
+.mission-card {
+    border-left: 5px solid #4caf50;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin: 40px 0;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--stat-color, #6f42c1);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.stat-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 20px;
+    color: white;
+    background: var(--stat-color, #6f42c1);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--stat-color, #6f42c1);
+    display: block;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.geography-info {
+    background: linear-gradient(135deg, #f1f8e9 0%, #dcedc8 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 40px 0;
+}
+
+.info-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.info-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.info-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.info-content {
+    flex-grow: 1;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 2px;
+}
+
+.info-value {
+    color: #6c757d;
+}
+
+.potential-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 40px 0;
+}
+
+.potential-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.potential-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--potential-color, #ff9800);
+}
+
+.potential-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.potential-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--potential-color, #ff9800);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 20px;
+}
+
+.contact-info {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 40px 0;
+}
+
+.achievement-section {
+    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 40px 0;
+}
+
+.achievement-item {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+}
+
+.achievement-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e91e63, #ad1457);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.breadcrumb-nav {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 15px 25px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    .stats-grid,
+    .potential-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .org-structure,
+    .vision-mission,
+    .geography-info,
+    .contact-info,
+    .achievement-section {
+        padding: 25px;
+    }
+    
+    .achievement-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .achievement-icon {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Profile Hero Section -->
+<section class="profile-hero">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="breadcrumb-nav mb-4">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'home:index' %}">Beranda</a></li>
+                            <li class="breadcrumb-item active">Profil Desa</li>
+                        </ol>
+                    </nav>
+                </div>
+                <h1 class="display-4 fw-bold mb-3">Profil Lengkap Desa Sumber Sari</h1>
+                <p class="lead mb-4">Mengenal lebih dalam sejarah, visi misi, struktur organisasi, dan potensi Desa Sumber Sari, Kabupaten Bantul, Daerah Istimewa Yogyakarta</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-map-marker-alt fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Kabupaten Bantul</strong>
+                            <br><small>Daerah Istimewa Yogyakarta</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-calendar fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Didirikan 1945</strong>
+                            <br><small>80 Tahun Berdiri</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-users fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>5,247 Jiwa</strong>
+                            <br><small>Total Penduduk 2025</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="hero-logo bg-white bg-opacity-10 rounded-3 p-4">
+                    <img src="{% static 'images/logo-sumber-sari-large.png' %}" alt="Logo Desa Sumber Sari" class="img-fluid mb-3" style="max-height: 150px;">
+                    <h4 class="text-white">DESA SUMBER SARI</h4>
+                    <p class="text-white-50 mb-0">Kabupaten Bantul, DIY</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Vision & Mission Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="vision-mission">
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bold text-primary">Visi & Misi Desa</h2>
+                <p class="lead text-muted">Landasan dan arah pembangunan Desa Sumber Sari</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="vision-card">
+                        <div class="text-center mb-4">
+                            <div class="bg-primary rounded-circle p-3 d-inline-flex">
+                                <i class="fas fa-eye fa-2x text-white"></i>
+                            </div>
+                        </div>
+                        <h4 class="text-primary mb-3 text-center">VISI DESA</h4>
+                        {% if profil %}
+                        <p class="text-center fs-5 fst-italic">"{{ profil.visi }}"</p>
+                        {% else %}
+                        <p class="text-center fs-5 fst-italic">"Terwujudnya Desa Sumber Sari yang Sejahtera, Mandiri, dan Berkelanjutan dengan Masyarakat yang Berkarakter dan Berakhlak Mulia"</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="mission-card">
+                        <div class="text-center mb-4">
+                            <div class="bg-success rounded-circle p-3 d-inline-flex">
+                                <i class="fas fa-bullseye fa-2x text-white"></i>
+                            </div>
+                        </div>
+                        <h4 class="text-success mb-3 text-center">MISI DESA</h4>
+                        {% if profil %}
+                        <div>{{ profil.misi|linebreaks }}</div>
+                        {% else %}
+                        <ol class="list-unstyled">
+                            <li class="mb-2">1. Meningkatkan kualitas sumber daya manusia melalui pendidikan dan pelatihan</li>
+                            <li class="mb-2">2. Mengembangkan ekonomi kerakyatan yang berbasis potensi lokal</li>
+                            <li class="mb-2">3. Melestarikan budaya dan tradisi Jawa yang adiluhung</li>
+                            <li class="mb-2">4. Membangun infrastruktur desa yang memadai dan berkelanjutan</li>
+                            <li>5. Menciptakan tata kelola pemerintahan yang transparan dan akuntabel</li>
+                        </ol>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Data Statistik Desa</h2>
+            <p class="lead text-muted">Profil demografi dan geografis Desa Sumber Sari tahun 2025</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card" style="--stat-color: #007bff;">
+                <div class="stat-icon" style="background: #007bff;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <span class="stat-number" style="color: #007bff;">5,247</span>
+                <span class="stat-label">Total Penduduk</span>
+            </div>
+            
+            <div class="stat-card" style="--stat-color: #28a745;">
+                <div class="stat-icon" style="background: #28a745;">
+                    <i class="fas fa-home"></i>
+                </div>
+                <span class="stat-number" style="color: #28a745;">1,456</span>
+                <span class="stat-label">Kepala Keluarga</span>
+            </div>
+            
+            <div class="stat-card" style="--stat-color: #ffc107;">
+                <div class="stat-icon" style="background: #ffc107;">
+                    <i class="fas fa-map"></i>
+                </div>
+                <span class="stat-number" style="color: #ffc107;">8.75</span>
+                <span class="stat-label">Luas (km²)</span>
+            </div>
+            
+            <div class="stat-card" style="--stat-color: #dc3545;">
+                <div class="stat-icon" style="background: #dc3545;">
+                    <i class="fas fa-building"></i>
+                </div>
+                <span class="stat-number" style="color: #dc3545;">15/5</span>
+                <span class="stat-label">RT / RW</span>
+            </div>
+            
+            <div class="stat-card" style="--stat-color: #6f42c1;">
+                <div class="stat-icon" style="background: #6f42c1;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <span class="stat-number" style="color: #6f42c1;">78%</span>
+                <span class="stat-label">Tingkat Pendidikan</span>
+            </div>
+            
+            <div class="stat-card" style="--stat-color: #17a2b8;">
+                <div class="stat-icon" style="background: #17a2b8;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span class="stat-number" style="color: #17a2b8;">892</span>
+                <span class="stat-label">UMKM Aktif</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- History Timeline Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Sejarah Desa Sumber Sari</h2>
+            <p class="lead text-muted">Perjalanan panjang pembentukan dan perkembangan desa</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="timeline">
+                    {% for sejarah in sejarah %}
+                    <div class="timeline-item">
+                        <div class="timeline-year">{{ sejarah.tahun }}</div>
+                        <h5 class="fw-bold text-primary">{{ sejarah.judul }}</h5>
+                        <p class="text-muted mb-0">{{ sejarah.konten }}</p>
+                    </div>
+                    {% empty %}
+                    <div class="timeline-item">
+                        <div class="timeline-year">1945</div>
+                        <h5 class="fw-bold text-primary">Pembentukan Desa</h5>
+                        <p class="text-muted mb-0">Desa Sumber Sari resmi dibentuk sebagai desa definitif berdasarkan Keputusan Bupati Bantul dengan luas wilayah 8.75 km² dan penduduk awal sekitar 800 jiwa.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">1965</div>
+                        <h5 class="fw-bold text-primary">Pembangunan Infrastruktur Awal</h5>
+                        <p class="text-muted mb-0">Dimulainya pembangunan jalan desa, balai desa pertama, dan sistem irigasi sederhana untuk mendukung pertanian masyarakat.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">1980</div>
+                        <h5 class="fw-bold text-primary">Era Modernisasi</h5>
+                        <p class="text-muted mb-0">Masuknya listrik, telepon, dan sarana komunikasi modern. Pembangunan sekolah dasar dan puskesmas pembantu.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2000</div>
+                        <h5 class="fw-bold text-primary">Otonomi Daerah</h5>
+                        <p class="text-muted mb-0">Implementasi otonomi daerah membawa perubahan dalam tata kelola pemerintahan desa dan peningkatan partisipasi masyarakat.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2014</div>
+                        <h5 class="fw-bold text-primary">Era Dana Desa</h5>
+                        <p class="text-muted mb-0">Dimulainya program Dana Desa yang memberikan anggaran langsung untuk pembangunan dan pemberdayaan masyarakat desa.</p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2020</div>
+                        <h5 class="fw-bold text-primary">Digitalisasi Desa</h5>
+                        <p class="text-muted mb-0">Implementasi sistem informasi desa, website resmi, dan layanan administrasi online untuk meningkatkan pelayanan publik.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- Organizational Structure Section -->
+<section class="py-5" id="struktur">
+    <div class="container">
+        <div class="org-structure">
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bold">Struktur Organisasi Pemerintahan Desa</h2>
+                <p class="lead text-muted">Susunan perangkat desa dan pembagian tugas yang efektif</p>
+            </div>
+            
+            <div class="row">
+                {% for perangkat in struktur %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="org-card">
+                        {% if perangkat.foto %}
+                        <img src="{{ perangkat.foto.url }}" alt="{{ perangkat.nama }}" class="org-photo">
+                        {% else %}
+                        <div class="org-photo bg-secondary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-2x text-white"></i>
+                        </div>
+                        {% endif %}
+                        <div class="org-name">{{ perangkat.nama }}</div>
+                        <div class="org-position">{{ perangkat.jabatan }}</div>
+                        <div class="org-contact">
+                            <small><i class="fas fa-phone me-1"></i>(0274) 123-456{{ forloop.counter }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <!-- Default structure if no data -->
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="org-card">
+                        <div class="org-photo bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user-tie fa-2x text-white"></i>
+                        </div>
+                        <div class="org-name">Suryanto, S.Sos</div>
+                        <div class="org-position">Kepala Desa</div>
+                        <div class="org-contact">
+                            <small><i class="fas fa-phone me-1"></i>(0274) 123-4567</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="org-card">
+                        <div class="org-photo bg-success d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-2x text-white"></i>
+                        </div>
+                        <div class="org-name">Siti Aminah, S.Pd</div>
+                        <div class="org-position">Sekretaris Desa</div>
+                        <div class="org-contact">
+                            <small><i class="fas fa-phone me-1"></i>(0274) 123-4568</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="org-card">
+                        <div class="org-photo bg-warning d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-2x text-white"></i>
+                        </div>
+                        <div class="org-name">Bambang Sutrisno</div>
+                        <div class="org-position">Kaur Keuangan</div>
+                        <div class="org-contact">
+                            <small><i class="fas fa-phone me-1"></i>(0274) 123-4569</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="org-card">
+                        <div class="org-photo bg-info d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-2x text-white"></i>
+                        </div>
+                        <div class="org-name">Dwi Hartono, S.T</div>
+                        <div class="org-position">Kasi Pembangunan</div>
+                        <div class="org-contact">
+                            <small><i class="fas fa-phone me-1"></i>(0274) 123-4570</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="org-card">
+                        <div class="org-photo bg-danger d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-2x text-white"></i>
+                        </div>
+                        <div class="org-name">Tri Wahyuni, S.Sos</div>
+                        <div class="org-position">Kasi Kesejahteraan</div>
+                        <div class="org-contact">
+                            <small><i class="fas fa-phone me-1"></i>(0274) 123-4571</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="org-card">
+                        <div class="org-photo bg-secondary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-2x text-white"></i>
+                        </div>
+                        <div class="org-name">Ahmad Fauzi</div>
+                        <div class="org-position">Kasi Pemerintahan</div>
+                        <div class="org-contact">
+                            <small><i class="fas fa-phone me-1"></i>(0274) 123-4572</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="org-card">
+                        <div class="org-photo bg-dark d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-2x text-white"></i>
+                        </div>
+                        <div class="org-name">Rini Setyaningsih</div>
+                        <div class="org-position">Kaur Umum</div>
+                        <div class="org-contact">
+                            <small><i class="fas fa-phone me-1"></i>(0274) 123-4573</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="org-card">
+                        <div class="org-photo bg-success d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-2x text-white"></i>
+                        </div>
+                        <div class="org-name">Hendra Kusuma</div>
+                        <div class="org-position">Kepala Dusun I</div>
+                        <div class="org-contact">
+                            <small><i class="fas fa-phone me-1"></i>(0274) 123-4574</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Geographic Information -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="geography-info">
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bold">Kondisi Geografis</h2>
+                <p class="lead text-muted">Letak, topografi, dan kondisi alam Desa Sumber Sari</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="info-card">
+                        <h5 class="text-success mb-4"><i class="fas fa-map-marker-alt me-2"></i>Letak & Batas Wilayah</h5>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-compass"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Koordinat</div>
+                                <div class="info-value">7°52'30"S 110°20'15"E</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Batas Utara</div>
+                                <div class="info-value">Desa Trimulyo</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Batas Selatan</div>
+                                <div class="info-value">Desa Wonokromo</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Batas Timur</div>
+                                <div class="info-value">Desa Srihardono</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Batas Barat</div>
+                                <div class="info-value">Kecamatan Sewon</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="info-card">
+                        <h5 class="text-success mb-4"><i class="fas fa-mountain me-2"></i>Topografi & Iklim</h5>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-mountain"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Ketinggian</div>
+                                <div class="info-value">25-40 meter di atas permukaan laut</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-chart-area"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Topografi</div>
+                                <div class="info-value">Dataran rendah dengan kemiringan 0-8%</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-thermometer-half"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Suhu Rata-rata</div>
+                                <div class="info-value">26-32°C sepanjang tahun</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-cloud-rain"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Curah Hujan</div>
+                                <div class="info-value">2.000-3.000 mm per tahun</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Jenis Tanah</div>
+                                <div class="info-value">Alluvial dan Regosol (subur)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Village Potential -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Potensi Desa</h2>
+            <p class="lead text-muted">Kekayaan sumber daya dan potensi unggulan Desa Sumber Sari</p>
+        </div>
+        
+        <div class="potential-grid">
+            <div class="potential-card" style="--potential-color: #28a745;">
+                <div class="potential-icon" style="background: #28a745;">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h5 class="fw-bold mb-3">Pertanian</h5>
+                <p class="text-muted">Lahan pertanian seluas 425 Ha dengan hasil padi, jagung, kedelai, dan sayuran organik berkualitas tinggi.</p>
+                <div class="mt-3">
+                    <span class="badge bg-success bg-opacity-20 text-success me-2">Padi 280 Ha</span>
+                    <span class="badge bg-success bg-opacity-20 text-success me-2">Palawija 145 Ha</span>
+                </div>
+            </div>
+            
+            <div class="potential-card" style="--potential-color: #007bff;">
+                <div class="potential-icon" style="background: #007bff;">
+                    <i class="fas fa-store"></i>
+                </div>
+                <h5 class="fw-bold mb-3">UMKM</h5>
+                <p class="text-muted">892 unit usaha mikro kecil menengah yang bergerak di bidang kuliner, kerajinan, dan perdagangan.</p>
+                <div class="mt-3">
+                    <span class="badge bg-primary bg-opacity-20 text-primary me-2">Kuliner 345</span>
+                    <span class="badge bg-primary bg-opacity-20 text-primary me-2">Kerajinan 234</span>
+                </div>
+            </div>
+            
+            <div class="potential-card" style="--potential-color: #dc3545;">
+                <div class="potential-icon" style="background: #dc3545;">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <h5 class="fw-bold mb-3">Pariwisata</h5>
+                <p class="text-muted">Objek wisata alam, budaya, dan religi yang menarik dengan fasilitas homestay dan paket wisata desa.</p>
+                <div class="mt-3">
+                    <span class="badge bg-danger bg-opacity-20 text-danger me-2">5 Objek Wisata</span>
+                    <span class="badge bg-danger bg-opacity-20 text-danger me-2">12 Homestay</span>
+                </div>
+            </div>
+            
+            <div class="potential-card" style="--potential-color: #ffc107;">
+                <div class="potential-icon" style="background: #ffc107;">
+                    <i class="fas fa-fish"></i>
+                </div>
+                <h5 class="fw-bold mb-3">Perikanan</h5>
+                <p class="text-muted">Budidaya ikan air tawar dengan teknologi modern dan kelompok pembudidaya yang terorganisir.</p>
+                <div class="mt-3">
+                    <span class="badge bg-warning bg-opacity-20 text-warning me-2">45 Kolam</span>
+                    <span class="badge bg-warning bg-opacity-20 text-warning me-2">8 Kelompok</span>
+                </div>
+            </div>
+            
+            <div class="potential-card" style="--potential-color: #17a2b8;">
+                <div class="potential-icon" style="background: #17a2b8;">
+                    <i class="fas fa-recycle"></i>
+                </div>
+                <h5 class="fw-bold mb-3">Bank Sampah</h5>
+                <p class="text-muted">Program pengelolaan sampah terintegrasi dengan bank sampah yang telah meraih penghargaan tingkat kabupaten.</p>
+                <div class="mt-3">
+                    <span class="badge bg-info bg-opacity-20 text-info me-2">15 TPS</span>
+                    <span class="badge bg-info bg-opacity-20 text-info me-2">3 Bank Sampah</span>
+                </div>
+            </div>
+            
+            <div class="potential-card" style="--potential-color: #6f42c1;">
+                <div class="potential-icon" style="background: #6f42c1;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h5 class="fw-bold mb-3">Pendidikan</h5>
+                <p class="text-muted">Fasilitas pendidikan lengkap dari PAUD hingga SMA dengan tenaga pengajar berkualitas.</p>
+                <div class="mt-3">
+                    <span class="badge bg-purple bg-opacity-20 text-purple me-2">12 Sekolah</span>
+                    <span class="badge bg-purple bg-opacity-20 text-purple me-2">78% Lulusan</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Achievements Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="achievement-section">
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bold">Prestasi & Penghargaan</h2>
+                <p class="lead text-muted">Berbagai pencapaian yang membanggakan di tingkat regional dan nasional</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="achievement-item">
+                        <div class="achievement-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Juara II Lomba Desa Tingkat Kabupaten 2024</h6>
+                            <p class="text-muted mb-0">Kategori Desa Mandiri dengan skor 89.5 dari 100</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="achievement-item">
+                        <div class="achievement-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Penghargaan Bank Sampah Terbaik 2023</h6>
+                            <p class="text-muted mb-0">Tingkat Provinsi DIY untuk inovasi pengelolaan sampah</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="achievement-item">
+                        <div class="achievement-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Desa Wisata Terbaik DIY 2022</h6>
+                            <p class="text-muted mb-0">Pengembangan wisata budaya dan edukasi pertanian</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="achievement-item">
+                        <div class="achievement-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Akreditasi A untuk Pelayanan Publik</h6>
+                            <p class="text-muted mb-0">Standar pelayanan prima dari Kemendagri 2023</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information -->
+<section class="py-5">
+    <div class="container">
+        <div class="contact-info">
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bold">Informasi Kontak</h2>
+                <p class="lead text-muted">Hubungi kami untuk informasi lebih lanjut tentang Desa Sumber Sari</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="info-card text-center">
+                        <div class="info-icon mx-auto mb-3" style="width: 60px; height: 60px; background: #ff9800;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h5 class="fw-bold">Alamat Kantor</h5>
+                        <p class="text-muted">Jl. Raya Sumber Sari No. 1<br>Bantul, DIY 55184</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <div class="info-card text-center">
+                        <div class="info-icon mx-auto mb-3" style="width: 60px; height: 60px; background: #4caf50;">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h5 class="fw-bold">Telepon & Fax</h5>
+                        <p class="text-muted">Telepon: (0274) 123-4567<br>Fax: (0274) 123-4568</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <div class="info-card text-center">
+                        <div class="info-icon mx-auto mb-3" style="width: 60px; height: 60px; background: #2196f3;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h5 class="fw-bold">Email & Website</h5>
+                        <p class="text-muted">info@sumbersari.desa.id<br>www.sumbersari.desa.id</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+

@@ -1,0 +1,486 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ berita.judul }} - Portal Desa Sumber Sari{% endblock %}
+
+{% block extra_css %}
+<style>
+.article-hero {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 60px 0;
+}
+
+.article-content {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.article-meta {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.category-badge {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.article-image {
+    width: 100%;
+    border-radius: 15px;
+    margin: 30px 0;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.share-section {
+    background: linear-gradient(135deg, #6f42c1, #5a32a3);
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.share-btn {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+.share-btn:hover {
+    background: white;
+    color: #6f42c1;
+    transform: translateY(-2px);
+}
+
+.related-news {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.related-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.related-item:hover {
+    background: #f8f9fa;
+    padding-left: 10px;
+    border-radius: 10px;
+}
+
+.related-item:last-child {
+    border-bottom: none;
+}
+
+.author-box {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+}
+
+.author-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.3);
+    margin-bottom: 15px;
+}
+
+.tags-section {
+    margin: 30px 0;
+}
+
+.tag-item {
+    background: #e9ecef;
+    color: #495057;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    margin: 3px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.tag-item:hover {
+    background: #007bff;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    z-index: 9999;
+    transition: width 0.3s ease;
+}
+
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #007bff;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,123,255,0.4);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.back-to-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,123,255,0.6);
+}
+
+.comment-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-top: 30px;
+}
+
+.comment-form {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Reading Progress Bar -->
+<div class="reading-progress" id="readingProgress"></div>
+
+<!-- Article Hero -->
+<section class="article-hero">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb bg-white bg-opacity-20 rounded p-3">
+                <li class="breadcrumb-item"><a href="{% url 'home:index' %}" class="text-white">Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'berita:list' %}" class="text-white">Berita</a></li>
+                <li class="breadcrumb-item active">{{ berita.judul|truncatewords:5 }}</li>
+            </ol>
+        </nav>
+        
+        <div class="row">
+            <div class="col-lg-10">
+                <a href="{% url 'berita:kategori' berita.kategori.slug %}" class="category-badge mb-3 d-inline-block">
+                    <i class="fas fa-tag me-1"></i>{{ berita.kategori.nama }}
+                </a>
+                <h1 class="display-5 fw-bold mb-4">{{ berita.judul }}</h1>
+                <p class="lead">{{ berita.ringkasan }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Article Meta -->
+                <div class="article-meta">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <img src="{% static 'images/admin-avatar.jpg' %}" alt="Author" class="rounded-circle me-3" width="50" height="50">
+                                <div>
+                                    <div class="fw-bold">{{ berita.penulis }}</div>
+                                    <small class="text-muted">{{ berita.tanggal_publish|date:"l, d F Y" }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <div class="d-flex justify-content-md-end gap-3 mt-3 mt-md-0">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>{{ berita.dibuat|timesince }} lalu
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-eye me-1"></i>1,247 views
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-book-open me-1"></i>5 min baca
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Image -->
+                {% if berita.gambar %}
+                <img src="{{ berita.gambar.url }}" alt="{{ berita.judul }}" class="article-image">
+                {% endif %}
+
+                <!-- Article Content -->
+                <div class="article-content">
+                    {{ berita.konten|linebreaks }}
+                </div>
+
+                <!-- Tags -->
+                <div class="tags-section">
+                    <h6 class="fw-bold mb-3"><i class="fas fa-tags me-2"></i>Tags:</h6>
+                    <a href="#" class="tag-item">{{ berita.kategori.nama }}</a>
+                    <a href="#" class="tag-item">Desa Sumber Sari</a>
+                    <a href="#" class="tag-item">Bantul</a>
+                    <a href="#" class="tag-item">DIY</a>
+                    {% if berita.kategori.nama == 'Pembangunan' %}
+                        <a href="#" class="tag-item">Infrastruktur</a>
+                        <a href="#" class="tag-item">Dana Desa</a>
+                    {% elif berita.kategori.nama == 'Sosial' %}
+                        <a href="#" class="tag-item">Masyarakat</a>
+                        <a href="#" class="tag-item">Bantuan Sosial</a>
+                    {% elif berita.kategori.nama == 'Ekonomi' %}
+                        <a href="#" class="tag-item">UMKM</a>
+                        <a href="#" class="tag-item">Ekonomi Desa</a>
+                    {% endif %}
+                </div>
+
+                <!-- Share Section -->
+                <div class="share-section">
+                    <h5 class="mb-3"><i class="fas fa-share-alt me-2"></i>Bagikan Artikel Ini</h5>
+                    <p class="mb-4">Bantu sebarkan informasi penting ini kepada warga lainnya</p>
+                    <div>
+                        <button class="btn share-btn" onclick="shareToFacebook()">
+                            <i class="fab fa-facebook-f me-1"></i>Facebook
+                        </button>
+                        <button class="btn share-btn" onclick="shareToTwitter()">
+                            <i class="fab fa-twitter me-1"></i>Twitter
+                        </button>
+                        <button class="btn share-btn" onclick="shareToWhatsApp()">
+                            <i class="fab fa-whatsapp me-1"></i>WhatsApp
+                        </button>
+                        <button class="btn share-btn" onclick="copyToClipboard()">
+                            <i class="fas fa-copy me-1"></i>Salin Link
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Comment Section -->
+                <div class="comment-section">
+                    <h4 class="mb-4"><i class="fas fa-comments me-2"></i>Komentar (5)</h4>
+                    
+                    <!-- Comment Form -->
+                    <div class="comment-form">
+                        <h6 class="mb-3">Tinggalkan Komentar</h6>
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" class="form-control" placeholder="Nama Lengkap" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input type="email" class="form-control" placeholder="Email" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control" rows="4" placeholder="Tulis komentar Anda..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-1"></i>Kirim Komentar
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Comments List -->
+                    <div class="comments-list">
+                        <div class="comment-item border-bottom pb-3 mb-3">
+                            <div class="d-flex">
+                                <div class="bg-primary rounded-circle p-2 text-white me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="mb-1">Siti Rahayu</h6>
+                                        <small class="text-muted">2 jam lalu</small>
+                                    </div>
+                                    <p class="mb-0">Alhamdulillah, pembangunan jalan ini sangat membantu warga untuk mobilitas sehari-hari. Semoga bisa segera selesai tepat waktu.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="comment-item border-bottom pb-3 mb-3">
+                            <div class="d-flex">
+                                <div class="bg-success rounded-circle p-2 text-white me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="mb-1">Bambang Sutrisno</h6>
+                                        <small class="text-muted">5 jam lalu</small>
+                                    </div>
+                                    <p class="mb-0">Terima kasih kepada pemerintah desa yang telah memprioritaskan pembangunan infrastruktur. Ini sangat berdampak positif bagi ekonomi desa.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Author Box -->
+                <div class="author-box mb-4">
+                    <img src="{% static 'images/admin-avatar.jpg' %}" alt="Author" class="author-avatar">
+                    <h5 class="fw-bold">{{ berita.penulis }}</h5>
+                    <p class="mb-3">Admin Desa Sumber Sari yang bertugas menyampaikan informasi terkini kepada seluruh warga desa.</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="#" class="btn btn-light btn-sm">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="btn btn-light btn-sm">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="btn btn-light btn-sm">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Related News -->
+                <div class="related-news mb-4">
+                    <h5 class="fw-bold mb-4"><i class="fas fa-newspaper me-2 text-primary"></i>Berita Terkait</h5>
+                    
+                    <div class="related-item">
+                        <img src="{% static 'images/news-thumb-1.jpg' %}" alt="Related News" class="rounded me-3" width="80" height="60" style="object-fit: cover;">
+                        <div>
+                            <h6 class="mb-1"><a href="#" class="text-decoration-none">Bedah Rumah Program RTLH Sasar 15 Keluarga</a></h6>
+                            <small class="text-muted">6 Juni 2025</small>
+                        </div>
+                    </div>
+                    
+                    <div class="related-item">
+                        <img src="{% static 'images/news-thumb-2.jpg' %}" alt="Related News" class="rounded me-3" width="80" height="60" style="object-fit: cover;">
+                        <div>
+                            <h6 class="mb-1"><a href="#" class="text-decoration-none">Rapat Koordinasi BPD dan Perangkat Desa</a></h6>
+                            <small class="text-muted">7 Juni 2025</small>
+                        </div>
+                    </div>
+                    
+                    <div class="related-item">
+                        <img src="{% static 'images/news-thumb-3.jpg' %}" alt="Related News" class="rounded me-3" width="80" height="60" style="object-fit: cover;">
+                        <div>
+                            <h6 class="mb-1"><a href="#" class="text-decoration-none">Pelatihan Digital Marketing UMKM</a></h6>
+                            <small class="text-muted">4 Juni 2025</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-envelope me-2"></i>Newsletter</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Dapatkan update berita terbaru langsung di email Anda!</p>
+                        <form>
+                            <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="Alamat Email">
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100">
+                                <i class="fas fa-paper-plane me-1"></i>Berlangganan
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Back to Top Button -->
+<div class="back-to-top" id="backToTop">
+    <i class="fas fa-chevron-up"></i>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Reading Progress Bar
+window.addEventListener('scroll', function() {
+    const scrollTop = window.pageYOffset;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    const scrollPercent = (scrollTop / docHeight) * 100;
+    document.getElementById('readingProgress').style.width = scrollPercent + '%';
+    
+    // Back to top button
+    const backToTop = document.getElementById('backToTop');
+    if (scrollTop > 300) {
+        backToTop.style.display = 'flex';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+
+// Back to top functionality
+document.getElementById('backToTop').addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Share functions
+function shareToFacebook() {
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+}
+
+function shareToTwitter() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('{{ berita.judul }}');
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+}
+
+function shareToWhatsApp() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('{{ berita.judul }} - ');
+    window.open(`https://api.whatsapp.com/send?text=${text}${url}`, '_blank');
+}
+
+function copyToClipboard() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('Link berhasil disalin!');
+    });
+}
+
+// Comment form submission
+document.querySelector('.comment-form form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Komentar berhasil dikirim! Akan ditampilkan setelah moderasi.');
+    this.reset();
+});
+</script>
+{% endblock %}

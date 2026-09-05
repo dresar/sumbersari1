@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tentang Desa - Portal Desa Sumber Sari{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-primary text-white py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold">Tentang Desa Sumber Sari</h1>
+                <p class="lead">Mengenal lebih dekat Desa Sumber Sari, Kabupaten Bantul, Daerah Istimewa Yogyakarta</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-5">
+    <div class="container">
+        {% if profil %}
+        <div class="row mb-5">
+            <div class="col-lg-8">
+                <div class="content-section">
+                    <h2 class="section-title">Profil Desa Sumber Sari</h2>
+                    <div class="text-content">
+                        {{ profil.deskripsi_singkat|linebreaks }}
+                    </div>
+                    
+                    <div class="row mt-5">
+                        <div class="col-md-6">
+                            <div class="vision-mission-card bg-light p-4 rounded h-100">
+                                <h4 class="text-primary"><i class="fas fa-eye me-2"></i>Visi Desa</h4>
+                                <p class="mb-0">{{ profil.visi|linebreaks }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="vision-mission-card bg-light p-4 rounded h-100">
+                                <h4 class="text-success"><i class="fas fa-bullseye me-2"></i>Misi Desa</h4>
+                                <p class="mb-0">{{ profil.misi|linebreaks }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="info-card">
+                    <h4><i class="fas fa-info-circle text-primary me-2"></i>Informasi Desa</h4>
+                    <div class="info-item">
+                        <strong>Nama Desa:</strong>
+                        <span>{{ profil.nama_desa }}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Kepala Desa:</strong>
+                        <span>{{ profil.kepala_desa }}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Alamat:</strong>
+                        <span>{{ profil.alamat|linebreaks }}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Telepon:</strong>
+                        <span>{{ profil.telepon }}</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Email:</strong>
+                        <span>{{ profil.email }}</span>
+                    </div>
+                    {% if profil.website %}
+                    <div class="info-item">
+                        <strong>Website:</strong>
+                        <span><a href="{{ profil.website }}" target="_blank">{{ profil.website }}</a></span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if statistik %}
+                <div class="info-card mt-4">
+                    <h4><i class="fas fa-chart-bar text-success me-2"></i>Statistik Desa</h4>
+                    <div class="stat-grid">
+                        <div class="stat-box">
+                            <div class="stat-number">{{ statistik.jumlah_penduduk|floatformat:0 }}</div>
+                            <div class="stat-label">Jiwa</div>
+                            <div class="stat-desc">Total Penduduk</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">{{ statistik.jumlah_kk|floatformat:0 }}</div>
+                            <div class="stat-label">KK</div>
+                            <div class="stat-desc">Kepala Keluarga</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">{{ statistik.luas_wilayah }}</div>
+                            <div class="stat-label">KM²</div>
+                            <div class="stat-desc">Luas Wilayah</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">{{ statistik.jumlah_rt }}/{{ statistik.jumlah_rw }}</div>
+                            <div class="stat-label">RT/RW</div>
+                            <div class="stat-desc">Rukun Tetangga</div>
+                        </div>
+                    </div>
+                    <small class="text-muted">Data tahun {{ statistik.tahun_data }}</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Geographic Information -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="section-title">Kondisi Geografis</h3>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="geographic-info">
+                            <h5><i class="fas fa-map-marker-alt text-primary me-2"></i>Lokasi & Batas Wilayah</h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Utara:</strong> Desa Trimulyo</li>
+                                <li><strong>Selatan:</strong> Desa Wonokromo</li>
+                                <li><strong>Timur:</strong> Desa Srihardono</li>
+                                <li><strong>Barat:</strong> Kecamatan Sewon</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="geographic-info">
+                            <h5><i class="fas fa-mountain text-success me-2"></i>Topografi</h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Ketinggian:</strong> 25-40 mdpl</li>
+                                <li><strong>Topografi:</strong> Dataran rendah</li>
+                                <li><strong>Iklim:</strong> Tropis</li>
+                                <li><strong>Curah Hujan:</strong> 2.000-3.000 mm/tahun</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Potensi Desa -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="section-title">Potensi Desa</h3>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="potential-card text-center p-4 bg-light rounded h-100">
+                            <div class="potential-icon">
+                                <i class="fas fa-seedling fa-3x text-success mb-3"></i>
+                            </div>
+                            <h5>Pertanian</h5>
+                            <p class="text-muted">Lahan pertanian yang subur dengan hasil padi, jagung, dan palawija</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="potential-card text-center p-4 bg-light rounded h-100">
+                            <div class="potential-icon">
+                                <i class="fas fa-store fa-3x text-primary mb-3"></i>
+                            </div>
+                            <h5>UMKM</h5>
+                            <p class="text-muted">Usaha mikro kecil menengah yang berkembang pesat di berbagai sektor</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="potential-card text-center p-4 bg-light rounded h-100">
+                            <div class="potential-icon">
+                                <i class="fas fa-camera fa-3x text-warning mb-3"></i>
+                            </div>
+                            <h5>Pariwisata</h5>
+                            <p class="text-muted">Objek wisata alam dan budaya yang menarik untuk dikunjungi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h3 class="mb-4">Ingin Berkontribusi untuk Desa?</h3>
+        <p class="lead mb-4">Mari bergabung dalam berbagai program pembangunan desa</p>
+        <a href="{% url 'home:kontak' %}" class="btn btn-primary btn-lg me-3">
+            <i class="fas fa-handshake me-2"></i>Hubungi Kami
+        </a>
+        <a href="{% url 'layanan:list' %}" class="btn btn-outline-primary btn-lg">
+            <i class="fas fa-list me-2"></i>Lihat Program
+        </a>
+    </div>
+</section>
+{% endblock %}

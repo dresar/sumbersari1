@@ -1,0 +1,767 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Layanan Publik - Portal Desa Sumber Sari{% endblock %}
+
+{% block extra_css %}
+<style>
+.service-hero {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('{% static "images/pattern.png" %}') repeat;
+    opacity: 0.1;
+}
+
+.service-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.service-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    position: relative;
+}
+
+.service-icon::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid rgba(0,123,255,0.3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.service-steps {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.step-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    width: 2px;
+    height: calc(100% + 20px);
+    background: #dee2e6;
+}
+
+.requirement-list {
+    background: white;
+    border-left: 4px solid #007bff;
+    padding: 20px;
+    border-radius: 0 10px 10px 0;
+}
+
+.time-cost-card {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+}
+
+.category-filter {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+.category-btn {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    color: #6c757d;
+    padding: 12px 24px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    margin: 5px;
+}
+
+.category-btn:hover,
+.category-btn.active {
+    background: #007bff;
+    border-color: #007bff;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.online-service {
+    background: linear-gradient(135deg, #6f42c1, #5a32a3);
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.service-stats {
+    background: linear-gradient(135deg, #fd7e14, #e8590c);
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 15px;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: block;
+}
+
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-radius: 15px 15px 0 0;
+}
+
+.emergency-contact {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Service Hero Section -->
+<section class="service-hero">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-concierge-bell me-3"></i>Layanan Publik Desa Sumber Sari
+                </h1>
+                <p class="lead mb-4">Pelayanan administrasi yang cepat, mudah, dan transparan untuk seluruh warga Desa Sumber Sari</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-clock fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Layanan 24/7</strong>
+                            <br><small>Online & Offline</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-shield-alt fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Aman & Terpercaya</strong>
+                            <br><small>Data Terlindungi</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-users fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Untuk Semua Warga</strong>
+                            <br><small>Tanpa Diskriminasi</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="hero-stats bg-white bg-opacity-10 rounded-3 p-4">
+                    <h3 class="mb-3">Statistik Layanan</h3>
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <i class="fas fa-file-alt fa-2x mb-2"></i>
+                                <div class="h4 fw-bold">1,247</div>
+                                <small>Surat Diproses</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <i class="fas fa-smile fa-2x mb-2"></i>
+                                <div class="h4 fw-bold">98%</div>
+                                <small>Kepuasan</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <i class="fas fa-clock fa-2x mb-2"></i>
+                                <div class="h4 fw-bold">2 Hari</div>
+                                <small>Rata-rata Proses</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <i class="fas fa-users fa-2x mb-2"></i>
+                                <div class="h4 fw-bold">892</div>
+                                <small>Warga Terlayani</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Online Service Banner -->
+<section class="py-4">
+    <div class="container">
+        <div class="online-service">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h3><i class="fas fa-laptop me-3"></i>Layanan Online 24 Jam</h3>
+                    <p class="mb-0">Akses layanan kapan saja, dimana saja melalui platform digital kami. Hemat waktu dan tenaga!</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="#" class="btn btn-light btn-lg">
+                        <i class="fas fa-external-link-alt me-2"></i>Portal Online
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Service Categories Filter -->
+<section class="py-4">
+    <div class="container">
+        <div class="category-filter text-center">
+            <h4 class="mb-4">Pilih Kategori Layanan</h4>
+            <div class="d-flex flex-wrap justify-content-center">
+                <button class="btn category-btn active" data-category="all">
+                    <i class="fas fa-th-large me-2"></i>Semua Layanan
+                </button>
+                <button class="btn category-btn" data-category="kependudukan">
+                    <i class="fas fa-id-card me-2"></i>Kependudukan
+                </button>
+                <button class="btn category-btn" data-category="izin">
+                    <i class="fas fa-file-contract me-2"></i>Perizinan
+                </button>
+                <button class="btn category-btn" data-category="sosial">
+                    <i class="fas fa-heart me-2"></i>Sosial
+                </button>
+                <button class="btn category-btn" data-category="ekonomi">
+                    <i class="fas fa-chart-line me-2"></i>Ekonomi
+                </button>
+                <button class="btn category-btn" data-category="kesehatan">
+                    <i class="fas fa-medkit me-2"></i>Kesehatan
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Services -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Services Grid -->
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3><i class="fas fa-list me-2 text-success"></i>Daftar Layanan</h3>
+                    <select class="form-select w-auto">
+                        <option>Urutkan: Terpopuler</option>
+                        <option>Urutkan: A-Z</option>
+                        <option>Urutkan: Tercepat</option>
+                    </select>
+                </div>
+
+                <div class="row service-grid">
+                    <!-- Service 1 -->
+                    <div class="col-md-6 mb-4" data-category="kependudukan">
+                        <div class="card service-card h-100">
+                            <div class="card-body text-center">
+                                <div class="service-icon">
+                                    <i class="fas fa-id-card"></i>
+                                </div>
+                                <h5 class="card-title">Surat Keterangan Domisili</h5>
+                                <p class="card-text text-muted">Penerbitan surat keterangan domisili untuk keperluan administrasi KTP, bank, dan lainnya.</p>
+                                
+                                <div class="service-info mb-3">
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <small class="text-muted">Waktu Proses</small>
+                                            <div class="fw-bold text-success">1-2 Hari</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Biaya</small>
+                                            <div class="fw-bold text-primary">Gratis</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#serviceModal" 
+                                            data-service="Surat Keterangan Domisili">
+                                        <i class="fas fa-info-circle me-2"></i>Detail Layanan
+                                    </button>
+                                    <a href="#" class="btn btn-outline-success">
+                                        <i class="fas fa-file-alt me-2"></i>Ajukan Online
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div class="col-md-6 mb-4" data-category="kependudukan">
+                        <div class="card service-card h-100">
+                            <div class="card-body text-center">
+                                <div class="service-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h5 class="card-title">Administrasi Kartu Keluarga</h5>
+                                <p class="card-text text-muted">Pengurusan pembuatan, perubahan, dan penambahan anggota keluarga dalam KK.</p>
+                                
+                                <div class="service-info mb-3">
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <small class="text-muted">Waktu Proses</small>
+                                            <div class="fw-bold text-success">3-5 Hari</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Biaya</small>
+                                            <div class="fw-bold text-primary">Gratis</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#serviceModal" 
+                                            data-service="Administrasi Kartu Keluarga">
+                                        <i class="fas fa-info-circle me-2"></i>Detail Layanan
+                                    </button>
+                                    <a href="#" class="btn btn-outline-success">
+                                        <i class="fas fa-file-alt me-2"></i>Ajukan Online
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service 3 -->
+                    <div class="col-md-6 mb-4" data-category="izin">
+                        <div class="card service-card h-100">
+                            <div class="card-body text-center">
+                                <div class="service-icon" style="background: linear-gradient(135deg, #ffc107, #e0a800);">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                                <h5 class="card-title">Izin Usaha Mikro</h5>
+                                <p class="card-text text-muted">Penerbitan izin usaha untuk kegiatan ekonomi mikro dan kecil di tingkat desa.</p>
+                                
+                                <div class="service-info mb-3">
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <small class="text-muted">Waktu Proses</small>
+                                            <div class="fw-bold text-success">5-7 Hari</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Biaya</small>
+                                            <div class="fw-bold text-primary">Rp 25.000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#serviceModal" 
+                                            data-service="Izin Usaha Mikro">
+                                        <i class="fas fa-info-circle me-2"></i>Detail Layanan
+                                    </button>
+                                    <a href="#" class="btn btn-outline-success">
+                                        <i class="fas fa-file-alt me-2"></i>Ajukan Online
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service 4 -->
+                    <div class="col-md-6 mb-4" data-category="sosial">
+                        <div class="card service-card h-100">
+                            <div class="card-body text-center">
+                                <div class="service-icon" style="background: linear-gradient(135deg, #dc3545, #c82333);">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <h5 class="card-title">Bantuan Sosial</h5>
+                                <p class="card-text text-muted">Pendaftaran dan verifikasi untuk berbagai program bantuan sosial pemerintah.</p>
+                                
+                                <div class="service-info mb-3">
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <small class="text-muted">Waktu Proses</small>
+                                            <div class="fw-bold text-success">7-14 Hari</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Biaya</small>
+                                            <div class="fw-bold text-primary">Gratis</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#serviceModal" 
+                                            data-service="Bantuan Sosial">
+                                        <i class="fas fa-info-circle me-2"></i>Detail Layanan
+                                    </button>
+                                    <a href="#" class="btn btn-outline-success">
+                                        <i class="fas fa-file-alt me-2"></i>Ajukan Online
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service 5 -->
+                    <div class="col-md-6 mb-4" data-category="kependudukan">
+                        <div class="card service-card h-100">
+                            <div class="card-body text-center">
+                                <div class="service-icon" style="background: linear-gradient(135deg, #6f42c1, #5a32a3);">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <h5 class="card-title">Surat Keterangan Usaha</h5>
+                                <p class="card-text text-muted">Penerbitan surat keterangan usaha untuk keperluan perbankan dan administrasi.</p>
+                                
+                                <div class="service-info mb-3">
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <small class="text-muted">Waktu Proses</small>
+                                            <div class="fw-bold text-success">2-3 Hari</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Biaya</small>
+                                            <div class="fw-bold text-primary">Rp 10.000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn" style="background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white;" 
+                                            data-bs-toggle="modal" data-bs-target="#serviceModal" data-service="Surat Keterangan Usaha">
+                                        <i class="fas fa-info-circle me-2"></i>Detail Layanan
+                                    </button>
+                                    <a href="#" class="btn btn-outline-success">
+                                        <i class="fas fa-file-alt me-2"></i>Ajukan Online
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service 6 -->
+                    <div class="col-md-6 mb-4" data-category="kesehatan">
+                        <div class="card service-card h-100">
+                            <div class="card-body text-center">
+                                <div class="service-icon" style="background: linear-gradient(135deg, #17a2b8, #138496);">
+                                    <i class="fas fa-medkit"></i>
+                                </div>
+                                <h5 class="card-title">Pelayanan Kesehatan</h5>
+                                <p class="card-text text-muted">Layanan posyandu, imunisasi, dan pemeriksaan kesehatan dasar di desa.</p>
+                                
+                                <div class="service-info mb-3">
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <small class="text-muted">Waktu Layanan</small>
+                                            <div class="fw-bold text-success">Setiap Rabu</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Biaya</small>
+                                            <div class="fw-bold text-primary">Gratis</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#serviceModal" 
+                                            data-service="Pelayanan Kesehatan">
+                                        <i class="fas fa-info-circle me-2"></i>Detail Layanan
+                                    </button>
+                                    <a href="#" class="btn btn-outline-success">
+                                        <i class="fas fa-calendar-plus me-2"></i>Daftar Antrian
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Service Statistics -->
+                <div class="service-stats mb-4">
+                    <h5 class="mb-4"><i class="fas fa-chart-bar me-2"></i>Statistik Layanan</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="stat-box">
+                                <span class="stat-number">24</span>
+                                <small>Jenis Layanan</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-box">
+                                <span class="stat-number">1.2K</span>
+                                <small>Surat Terbit</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-box">
+                                <span class="stat-number">98%</span>
+                                <small>Kepuasan</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-box">
+                                <span class="stat-number">2.1</span>
+                                <small>Rata-rata Hari</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Contact -->
+                <div class="emergency-contact mb-4">
+                    <h5><i class="fas fa-phone-alt me-2"></i>Kontak Darurat</h5>
+                    <p class="mb-3">Hubungi kami untuk layanan mendesak</p>
+                    <div class="d-grid gap-2">
+                        <a href="tel:+6227412345" class="btn btn-light">
+                            <i class="fas fa-phone me-2"></i>(0274) 123-4567
+                        </a>
+                        <a href="https://wa.me/6281234567890" class="btn btn-light">
+                            <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service Hours -->
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Jam Pelayanan</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                <span><strong>Senin - Kamis</strong></span>
+                                <span>08:00 - 16:00</span>
+                            </li>
+                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                <span><strong>Jumat</strong></span>
+                                <span>08:00 - 11:30</span>
+                            </li>
+                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                <span><strong>Sabtu</strong></span>
+                                <span>08:00 - 12:00</span>
+                            </li>
+                            <li class="d-flex justify-content-between py-2">
+                                <span><strong>Minggu</strong></span>
+                                <span class="text-danger">Tutup</span>
+                            </li>
+                        </ul>
+                        <div class="alert alert-warning mt-3 mb-0">
+                            <small><i class="fas fa-info-circle me-1"></i>
+                            Layanan online tersedia 24 jam</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Required Documents -->
+                <div class="card mt-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Dokumen Umum</h5>
+                    </div>
+                    <div class="card-body">
+                        <small class="text-muted mb-2 d-block">Dokumen yang sering dibutuhkan:</small>
+                        <div class="d-flex flex-wrap gap-1">
+                            <span class="badge bg-secondary">KTP</span>
+                            <span class="badge bg-secondary">KK</span>
+                            <span class="badge bg-secondary">Akta Lahir</span>
+                            <span class="badge bg-secondary">Surat Nikah</span>
+                            <span class="badge bg-secondary">Foto 3x4</span>
+                            <span class="badge bg-secondary">Meterai</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Service Modal -->
+<div class="modal fade" id="serviceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-info-circle me-2"></i>Detail Layanan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h6 class="text-primary"><i class="fas fa-list me-2"></i>Persyaratan</h6>
+                        <div class="requirement-list mb-4">
+                            <ul class="mb-0">
+                                <li>Fotokopi KTP pemohon</li>
+                                <li>Fotokopi Kartu Keluarga</li>
+                                <li>Surat pengantar RT/RW</li>
+                                <li>Pas foto 3x4 (2 lembar)</li>
+                                <li>Meterai 10.000</li>
+                            </ul>
+                        </div>
+                        
+                        <h6 class="text-success"><i class="fas fa-clipboard-list me-2"></i>Prosedur</h6>
+                        <div class="service-steps">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div>
+                                    <strong>Persiapan Dokumen</strong>
+                                    <p class="mb-0 text-muted">Siapkan semua dokumen yang diperlukan sesuai daftar persyaratan</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div>
+                                    <strong>Pengajuan</strong>
+                                    <p class="mb-0 text-muted">Datang ke kantor desa atau ajukan melalui layanan online</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div>
+                                    <strong>Verifikasi</strong>
+                                    <p class="mb-0 text-muted">Petugas akan memverifikasi kelengkapan dan kebenaran dokumen</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">4</div>
+                                <div>
+                                    <strong>Penyelesaian</strong>
+                                    <p class="mb-0 text-muted">Surat selesai dan siap diambil sesuai waktu yang ditentukan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="time-cost-card mb-3">
+                            <h6><i class="fas fa-clock me-2"></i>Waktu Proses</h6>
+                            <div class="h3 mb-0">1-2 Hari</div>
+                        </div>
+                        <div class="time-cost-card">
+                            <h6><i class="fas fa-money-bill me-2"></i>Biaya</h6>
+                            <div class="h3 mb-0">GRATIS</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-file-alt me-2"></i>Ajukan Sekarang
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Category filter functionality
+document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Remove active class from all buttons
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        const category = this.dataset.category;
+        const services = document.querySelectorAll('.service-grid > div[data-category]');
+        
+        services.forEach(service => {
+            if (category === 'all' || service.dataset.category === category) {
+                service.style.display = 'block';
+            } else {
+                service.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Modal dynamic content
+document.getElementById('serviceModal').addEventListener('show.bs.modal', function(event) {
+    const button = event.relatedTarget;
+    const service = button.getAttribute('data-service');
+    const modalTitle = this.querySelector('.modal-title');
+    modalTitle.innerHTML = `<i class="fas fa-info-circle me-2"></i>Detail Layanan: ${service}`;
+});
+</script>
+{% endblock %}

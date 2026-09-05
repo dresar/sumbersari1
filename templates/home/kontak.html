@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Hubungi Kami - Portal Desa Sumber Sari{% endblock %}
+
+{% block extra_css %}
+<style>
+.contact-hero {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+    padding: 80px 0;
+}
+
+.contact-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.contact-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 20px;
+    color: white;
+}
+
+.form-section {
+    background: #f8f9fa;
+    border-radius: 20px;
+    padding: 40px;
+    margin: 40px 0;
+}
+
+.form-control:focus {
+    border-color: #17a2b8;
+    box-shadow: 0 0 0 0.2rem rgba(23,162,184,0.25);
+}
+
+.office-hours {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+}
+
+.map-container {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.emergency-contact {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.social-links {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.social-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    text-decoration: none;
+    margin: 10px;
+    transition: all 0.3s ease;
+}
+
+.social-btn:hover {
+    transform: scale(1.1);
+    color: white;
+}
+
+.facebook { background: #3b5998; }
+.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.youtube { background: #ff0000; }
+.whatsapp { background: #25d366; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="contact-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-phone me-3"></i>Hubungi Kami
+                </h1>
+                <p class="lead mb-4">Kami siap melayani dan membantu Anda. Jangan ragu untuk menghubungi kami melalui berbagai saluran komunikasi yang tersedia.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-clock fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Buka Setiap Hari</strong>
+                            <br><small>Senin - Sabtu</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                            <i class="fas fa-headset fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Respon Cepat</strong>
+                            <br><small>24 Jam Online</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Methods -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-6 fw-bold">Cara Menghubungi Kami</h2>
+            <p class="lead text-muted">Pilih cara yang paling nyaman untuk Anda</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="contact-card">
+                    <div class="contact-icon" style="background: #28a745;">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Alamat Kantor</h5>
+                    <p class="text-muted mb-3">Jl. Raya Sumber Sari No. 1<br>Bantul, DIY 55184</p>
+                    <a href="https://maps.google.com" target="_blank" class="btn btn-outline-success">
+                        <i class="fas fa-directions me-1"></i>Lihat di Maps
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="contact-card">
+                    <div class="contact-icon" style="background: #007bff;">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Telepon</h5>
+                    <p class="text-muted mb-3">Hubungi langsung untuk<br>informasi cepat</p>
+                    <a href="tel:+6227412345" class="btn btn-outline-primary">
+                        <i class="fas fa-phone me-1"></i>(0274) 123-4567
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="contact-card">
+                    <div class="contact-icon" style="background: #25d366;">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">WhatsApp</h5>
+                    <p class="text-muted mb-3">Chat langsung dengan<br>admin desa</p>
+                    <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-outline-success">
+                        <i class="fab fa-whatsapp me-1"></i>Kirim Pesan
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="contact-card">
+                    <div class="contact-icon" style="background: #dc3545;">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Email</h5>
+                    <p class="text-muted mb-3">Kirim pertanyaan detail<br>via email</p>
+                    <a href="mailto:info@sumbersari.desa.id" class="btn btn-outline-danger">
+                        <i class="fas fa-envelope me-1"></i>Kirim Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="form-section">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="text-center mb-5">
+                        <h2 class="display-6 fw-bold">Kirim Pesan</h2>
+                        <p class="lead text-muted">Isi form di bawah ini dan kami akan merespons secepat mungkin</p>
+                    </div>
+                    
+                    <form method="post" id="contactForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nama" class="form-label">Nama Lengkap *</label>
+                                <input type="text" class="form-control" id="nama" name="nama" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="telepon" class="form-label">Nomor Telepon</label>
+                                <input type="tel" class="form-control" id="telepon" name="telepon">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="subjek" class="form-label">Subjek *</label>
+                                <select class="form-select" id="subjek" name="subjek" required>
+                                    <option value="">Pilih Subjek</option>
+                                    <option value="informasi">Informasi Umum</option>
+                                    <option value="layanan">Layanan Desa</option>
+                                    <option value="pengaduan">Pengaduan</option>
+                                    <option value="saran">Saran & Masukan</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="pesan" class="form-label">Pesan *</label>
+                            <textarea class="form-control" id="pesan" name="pesan" rows="5" placeholder="Tuliskan pesan Anda disini..." required></textarea>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="setuju" required>
+                            <label class="form-check-label" for="setuju">
+                                Saya setuju dengan <a href="#" class="text-decoration-none">kebijakan privasi</a> dan <a href="#" class="text-decoration-none">syarat ketentuan</a>
+                            </label>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Kirim Pesan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map & Office Info -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h3 class="mb-4"><i class="fas fa-map-marked-alt me-2 text-primary"></i>Lokasi Kantor Desa</h3>
+                <div class="map-container">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.8267!2d110.3659!3d-7.8324!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwNDknNTIuNiJTIDExMMKwMjEnNTcuMyJF!5e0!3m2!1sen!2sid!4v1234567890"
+                        width="100%" 
+                        height="400" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="bg-white p-4 rounded-3 shadow-sm">
+                            <h5 class="text-primary mb-3"><i class="fas fa-car me-2"></i>Akses Transportasi</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-bus me-2 text-muted"></i>Bus Trans Jogja: Halte Bantul</li>
+                                <li class="mb-2"><i class="fas fa-motorcycle me-2 text-muted"></i>Ojek Online: Tersedia</li>
+                                <li class="mb-2"><i class="fas fa-car me-2 text-muted"></i>Parkir: Gratis & Luas</li>
+                                <li><i class="fas fa-walking me-2 text-muted"></i>Akses Difabel: Tersedia</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="bg-white p-4 rounded-3 shadow-sm">
+                            <h5 class="text-success mb-3"><i class="fas fa-landmark me-2"></i>Landmark Terdekat</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-hospital me-2 text-muted"></i>Puskesmas Bantul (500m)</li>
+                                <li class="mb-2"><i class="fas fa-graduation-cap me-2 text-muted"></i>SD Negeri 1 Sumber Sari (200m)</li>
+                                <li class="mb-2"><i class="fas fa-shopping-cart me-2 text-muted"></i>Pasar Bantul (1km)</li>
+                                <li><i class="fas fa-gas-pump me-2 text-muted"></i>SPBU Shell (800m)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Emergency Contact -->
+                <div class="emergency-contact">
+                    <h5><i class="fas fa-exclamation-triangle me-2"></i>Kontak Darurat</h5>
+                    <p class="mb-3">Untuk situasi darurat, hubungi nomor berikut:</p>
+                    <div class="d-grid gap-2">
+                        <a href="tel:112" class="btn btn-light">
+                            <i class="fas fa-phone me-2"></i>112 (Darurat)
+                        </a>
+                        <a href="tel:+6227412345" class="btn btn-light">
+                            <i class="fas fa-phone me-2"></i>(0274) 123-4567
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Office Hours -->
+                <div class="office-hours mb-4">
+                    <h5><i class="fas fa-clock me-2"></i>Jam Pelayanan</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Senin - Kamis</strong><br>
+                            08:00 - 16:00
+                        </div>
+                        <div class="col-6">
+                            <strong>Jumat</strong><br>
+                            08:00 - 11:30
+                        </div>
+                        <div class="col-6 mt-3">
+                            <strong>Sabtu</strong><br>
+                            08:00 - 12:00
+                        </div>
+                        <div class="col-6 mt-3">
+                            <strong>Minggu</strong><br>
+                            <span class="text-warning">Tutup</span>
+                        </div>
+                    </div>
+                    <div class="alert alert-light mt-3 mb-0">
+                        <small><i class="fas fa-info-circle me-1"></i>
+                        Layanan online tersedia 24 jam</small>
+                    </div>
+                </div>
+
+                <!-- Social Media -->
+                <div class="social-links">
+                    <h5 class="mb-3"><i class="fas fa-share-alt me-2"></i>Media Sosial</h5>
+                    <div>
+                        <a href="#" class="social-btn facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-btn instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-btn youtube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#" class="social-btn whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                    <p class="text-muted mt-3 mb-0">Ikuti media sosial kami untuk update terbaru</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form submission
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show loading
+    const btn = this.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengirim...';
+    btn.disabled = true;
+    
+    // Simulate form submission
+    setTimeout(() => {
+        alert('Pesan berhasil dikirim! Kami akan merespons segera.');
+        this.reset();
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }, 2000);
+});
+
+// Form validation
+document.querySelectorAll('#contactForm input, #contactForm textarea, #contactForm select').forEach(field => {
+    field.addEventListener('blur', function() {
+        if (this.hasAttribute('required') && !this.value) {
+            this.classList.add('is-invalid');
+        } else {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        }
+    });
+});
+</script>
+{% endblock %}
